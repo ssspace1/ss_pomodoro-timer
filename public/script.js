@@ -1,5 +1,44 @@
 // script.js
 
+// ===== 追加部分 開始 =====
+let userSettings = {
+  pomodoro:25,
+  short:5,
+  long:10,
+  playSound:true,
+  theme:"default"
+};
+
+const alertSound = new Audio("https://example.com/chime.mp3"); // 簡易音源URL
+alertSound.volume = 1.0;
+
+// 設定をローカルストレージへ保存/読み込み
+function loadUserSettings(){
+  const s = localStorage.getItem('userSettings');
+  if(s){
+    userSettings = JSON.parse(s);
+  }
+}
+function saveUserSettings(){
+  localStorage.setItem('userSettings', JSON.stringify(userSettings));
+}
+
+// 背景テーマ適用
+function applyTheme(theme){
+  const bg = document.getElementById('bg-image');
+  if(theme === 'forest'){
+    bg.src = "https://example.com/forest.jpg";
+  } else if(theme==='cafe'){
+    bg.src = "https://example.com/cafe.jpg";
+  } else if(theme==='night'){
+    bg.src = "https://example.com/night.jpg";
+  } else {
+    bg.src = "https://example.com/default.jpg";
+  }
+}
+// ===== 追加部分 終了 =====
+
+
 // ====== デイリー作業時間集計ロジック ======
 function getTodayDateStr(){
   const d = new Date();
@@ -65,7 +104,8 @@ function onTimerModeChange(newMode){
 // ====== ポモドーロタイマーロジック（簡易版） ======
 let isClockRunning = false;
 let isClockStopped = true;
-let currentTimeLeftInSession = 25*60; // 初期値25分
+let currentTimeLeftInSession = 25*60; // 初期値（後でユーザ設定で上書き）
+
 let timerInterval = null;
 
 const timerDisplay = document.getElementById('pomodoro-timer');
@@ -74,6 +114,15 @@ const stopBtn = document.getElementById('pomodoro-stop');
 const timerTypeInputs = document.querySelectorAll('input[name="timerType"]');
 const playIcon = document.getElementById('play-icon');
 const pauseIcon = document.getElementById('pause-icon');
+
+// getInitialTimeForModeをユーザー設定値を使うように修正
+function getInitialTimeForMode(){
+  const mode = document.querySelector('input[name="timerType"]:checked').value;
+  let t = userSettings.pomodoro; // default pomodoro
+  if(mode==='short') t=userSettings.short;
+  if(mode==='long') t=userSettings.long;
+  return t*60;
+}
 
 function updateTimerDisplay(){
   const min = String(Math.floor(currentTimeLeftInSession/60)).padStart(2,'0');
@@ -137,34 +186,25 @@ function toggleClock(reset){
   }
 }
 
-function getInitialTimeForMode(){
-  // 仮にユーザ設定が無ければ固定時間
-  // pomodoro:25分, short:5分, long:10分 例
-  let pomodoroTime = 25; // 分
-  let shortBreakTime = 5;
-  let longBreakTime = 10;
-
-  const mode = document.querySelector('input[name="timerType"]:checked').value;
-  let t = 25*60;
-  if(mode === 'pomodoro') t = pomodoroTime * 60;
-  else if(mode === 'short') t = shortBreakTime * 60;
-  else if(mode === 'long') t = longBreakTime * 60;
-  return t;
-}
-
 // モード変更時
 timerTypeInputs.forEach(input => {
   input.addEventListener('change', ()=>{
     const newMode = document.querySelector('input[name="timerType"]:checked').value;
     onTimerModeChange(newMode);
-    toggleClock(true); // モード変更で一度リセットして初期時間に変更
+    toggleClock(true); // モード変更で一度リセット
   });
 });
 
-// タイマー終了イベントが飛んできたら音を鳴らすなど
+// タイマー終了イベントで音と通知
 document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>{
-  // ここでサウンド再生や通知など
-  console.log("Timer Finished!");
+  if(userSettings.playSound){
+    alertSound.currentTime = 0;
+    alertSound.play();
+  }
+  // 通知表示（許可されている場合）
+  if(Notification.permission==='granted'){
+    new Notification("Pomodoro Finished!", {body:"Time to take a break!"});
+  }
 });
 
 // ボタン操作
@@ -175,9 +215,49 @@ stopBtn.addEventListener('click', ()=>{
   toggleClock(true);
 });
 
-// ページロード時の処理
+// 設定モーダル制御
+const settingsModal = document.getElementById('settingsModal');
+const settingsBtn = document.getElementById('pomodoro-settings');
+const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
+settingsBtn.addEventListener('click', ()=>{
+  // 現行設定値を入力欄へ反映
+  document.getElementById('pomodoroLength').value = userSettings.pomodoro;
+  document.getElementById('shortBreakLength').value = userSettings.short;
+  document.getElementById('longBreakLength').value = userSettings.long;
+  document.getElementById('playSoundCheck').checked = userSettings.playSound;
+  document.getElementById('themeSelect').value = userSettings.theme;
+  
+  settingsModal.classList.remove('hidden');
+});
+
+saveSettingsBtn.addEventListener('click', ()=>{
+  userSettings.pomodoro = parseInt(document.getElementById('pomodoroLength').value,10);
+  userSettings.short = parseInt(document.getElementById('shortBreakLength').value,10);
+  userSettings.long = parseInt(document.getElementById('longBreakLength').value,10);
+  userSettings.playSound = document.getElementById('playSoundCheck').checked;
+  userSettings.theme = document.getElementById('themeSelect').value;
+  saveUserSettings();
+  applyTheme(userSettings.theme);
+  settingsModal.classList.add('hidden');
+  // タイマーリセット
+  toggleClock(true);
+});
+
+closeSettingsBtn.addEventListener('click', ()=>{
+  settingsModal.classList.add('hidden');
+});
+
+// ページロード時
 document.addEventListener('DOMContentLoaded', ()=>{
   loadDailyWorkLog();
   updateDailyWorkTimeDisplay();
+  loadUserSettings();
+  applyTheme(userSettings.theme);
   updateTimerDisplay();
+  // 通知許可要求（必要なら）
+  if(Notification && Notification.permission==='default'){
+    Notification.requestPermission();
+  }
 });

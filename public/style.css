@@ -90,6 +90,7 @@ body {
   border-radius:5px;
 }
 
+/* レスポンシブ対応 */
 @media (max-width:750px) {
   #top-left, #top-right, #bottom-left, #bottom-mid { display:none; }
   #pomodoro-timer { font-size:7rem; }
@@ -109,3 +110,16 @@ body {
   #pomodoro-stop, #pomodoro-settings { width:38px; height:38px; }
   #pomodoro-stop svg, #pomodoro-settings svg { width:32px; height:32px; }
 }
+
+/* ここから追加するモーダル用CSS */
+
+.modal {
+  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center;
+}
+.modal.hidden { display:none; }
+.modal-content {
+  background:#333; color:#fff; padding:20px; border-radius:10px; width:300px;
+  font-family:'Inter',sans-serif;
+}
+.modal-content h2 { margin-top:0; }
+.modal-actions { margin-top:20px; display:flex; justify-content:space-between; }
