@@ -1,38 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pomodoro Timer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Aesthetic Pomodoro Timer with Stats</title>
+  <meta name="description" content="An aesthetic Pomodoro timer with daily stats and optional Notion integration.">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Inter:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23E74C3C%22/></svg>">
 </head>
 <body>
-  <div class="wrapper">
-    <h1>Pomodoro Timer</h1>
-    <div class="timer-display">25:00</div>
+  <div id="bg-wrapper">
+    <img id="bg-image" src="https://example.com/aesthetic-bg.jpg" width="100%" height="100%"/>
+    <div id="player"></div>
+  </div>
 
-    <div class="controls">
-      <button id="startBtn">Start</button>
-      <button id="pauseBtn">Pause</button>
-      <button id="resetBtn">Reset</button>
+  <div id="top">
+    <div id="top-left">
+      <img class="logo" src="https://example.com/logo.png" width="300" height="auto" alt="Logo"/>
+    </div>
+    <div id="top-right"></div>
+  </div>
+
+  <!-- メインポモドーロUI -->
+  <div id="pomodoro-container">
+    <div id="pomodoro-durations">
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="timerType" id="pomodoro" value="pomodoro" checked>
+          <label class="form-check-label btn" for="pomodoro">Pomodoro</label>
+          <div class="pomo-counter">&nbsp;</div>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="timerType" id="short" value="short">
+          <label class="form-check-label btn" for="short">Short Break</label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="timerType" id="long" value="long">
+          <label class="form-check-label btn" for="long">Long Break</label>
+      </div>
     </div>
 
-    <div class="settings">
-      <label>
-        Work (min):
-        <input type="number" id="workTime" value="25" min="1">
-      </label>
-      <label>
-        Break (min):
-        <input type="number" id="breakTime" value="5" min="1">
-      </label>
-      <label>
-        Task Name:
-        <input type="text" id="taskName" placeholder="(optional)">
-      </label>
+    <div id="pomodoro-timer">25:00</div>
+
+    <div id="pomodoro-clock-actions">
+      <button id="pomodoro-start" class="btn btn-primary">
+        <span id="play-icon">start</span>
+        <span id="pause-icon" class="hidden">pause</span>
+      </button>
+      <button id="pomodoro-stop" class="no-style bg-transparent">
+        <!-- Stop SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#fff" viewBox="0 0 50 50">
+          <path d="M48.3,3.4c-0.6-0.3-1.3-0.1-1.8,0.3L42.4,8l-0.6-0.5C37.3,3.1,31.3,0.7,25,0.7c-6.5,0-12.6,2.5-17.2,7.1
+          C3.2,12.4,0.7,18.5,0.7,25c0,6.5,2.5,12.6,7.1,17.2c4.6,4.6,10.7,7.1,17.2,7.1c6,0,11.8-2.2,16.3-6.3c0.1-0.1,0.1-0.2,0.1-0.3
+          c0-0.1,0-0.2-0.1-0.3l-4-4c-0.2-0.2-0.4-0.2-0.5,0c-3.2,2.9-7.4,4.4-11.7,4.4c-4.8,0-9.3-1.9-12.6-5.2c-3.3-3.3-5.2-7.8-5.2-12.4
+          c0-4.8,1.8-9.3,5.2-12.7C15.8,9,20.2,7.2,25,7.2c4.5,0,8.7,1.7,12,4.8l0.6,0.6L33,17.4c-0.5,0.5-0.6,1.1-0.3,1.8
+          c0.3,0.6,0.8,1,1.5,1h13.6c0.9,0,1.6-0.7,1.6-1.6V4.9C49.3,4.3,48.9,3.7,48.3,3.4z"/>
+        </svg>
+      </button>
+      <button id="pomodoro-settings" class="no-style bg-transparent">
+        <!-- Settings icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36" height="36" fill="white">
+          <path d="M34.6 23.3l-3.2-2.9-.3-.3.1-.4c.1-.6.1-1.2.1-1.8 0-.6 0-1.2-.1-1.8l-.1-.4.3-.3 3.2-2.9c.3-.3.4-.7.3-1-.3-.8-.7-1.6-1.1-2.4l-.3-.6c-.5-.8-1-1.5-1.5-2.2-.2-.2-.4-.3-.7-.3h-.3l-4.1 1.3-.4.1-.3-.2c-.8-.6-1.9-1.3-3.1-1.8l-.3-.1-.1-.4-1-3.9c-.1-.4-.4-.7-.7-.7-1-.2-2-.2-3-.2s-2 .1-3 .2c-.4.1-.7.3-.7.7l-.9 4.2-.1.4-.4.1c-1.1.4-2.1 1-3 1.8l-.3.2-.4-.1-4-1.3h-.3c-.3 0-.5.1-.7.3-.6.7-1.1 1.4-1.6 2.2l-.3.5c-.4.8-.8 1.6-1.1 2.4-.1.3 0 .7.3 1l3.2 2.9.3.3-.1.4c-.1.6-.1 1.2-.1 1.8 0 .6 0 1.2.1 1.8l.1.4-.3.3-3.2 2.9c-.3.3-.4.7-.3 1 .3.8.7 1.6 1.1 2.4l.3.6c.4.7 1 1.5 1.5 2.2.2.2.4.3.7.3h.3l4.1-1.3.4-.1.3.2c.9.7 2 1.3 3 1.8l.4.1.1.4.9 4.2c.1.4.4.6.8.7 1 .2 1.9.2 2.9.2s2-.1 3-.2c.4-.1.7-.4.8-.7l.9-4.2.1-.4.3-.1c1.2-.5 2.2-1.1 3.1-1.8l.3-.2.4.1 4.1 1.3h.3c.3 0 .5-.1.7-.3.6-.7 1.1-1.4 1.5-2.2l.3-.6c.4-.8.8-1.6 1.1-2.4.1-.6-.1-1-.3-1.2zm-12-.7c-1.2 1.2-2.9 1.9-4.6 1.9s-3.4-.7-4.6-1.9c-1.2-1.2-1.9-2.9-1.9-4.7 0-1.7.7-3.4 1.9-4.6 1.2-1.3 2.9-1.9 4.6-1.9 1.7 0 3.4.7 4.6 1.9 1.2 1.2 1.9 2.9 1.9 4.6.1 1.8-.6 3.5-1.9 4.7z"/>
+        </svg>
+      </button>
     </div>
   </div>
+
+  <!-- 今日の合計作業時間表示 -->
+  <div id="daily-work-time">
+    Today's Work: <span id="dailyWorkDisplay">00:00:00</span>
+  </div>
+
+  <div id="bottom">
+    <div id="bottom-left">
+      <!-- Spotify iframe例: 必要なら使用 -->
+      <iframe id="spotify" width="100%" height="80" frameborder="0" allowfullscreen="" data-src="https://open.spotify.com/embed/playlist/4Zjli1P13J5mmSCD5iKAXK?theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </div>
+    <div id="bottom-mid"></div>
+    <div id="bottom-right"></div>
+  </div>
+
   <script src="./script.js" defer></script>
 </body>
 </html>

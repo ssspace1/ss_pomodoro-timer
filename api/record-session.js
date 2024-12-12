@@ -7,9 +7,16 @@ export default async function handler(req, res) {
 
   const { timestamp, duration, mode, task } = req.body;
 
-  const notion = new Client({ auth: process.env.NOTION_TOKEN });
+  // 環境変数から取得（Vercelで設定）
+  const notionToken = process.env.NOTION_TOKEN;
   const databaseId = process.env.NOTION_DATABASE_ID;
 
+  if(!notionToken || !databaseId){
+    return res.status(500).json({error:"Notion integration not configured"});
+  }
+
+  const notion = new Client({ auth: notionToken });
+  
   try {
     const properties = {
       "Date": { date: { start: timestamp } },
@@ -17,10 +24,10 @@ export default async function handler(req, res) {
       "Type": { select: { name: mode } }
     };
 
-    // Taskが指定されていればタイトルプロパティとして追加（Notion DBで"Task"がTitleプロパティ想定）
-    if (task) {
-      properties["Task"] = { 
-        title: [{ type: "text", text: { content: task } }] 
+    if (task && task.trim() !== "") {
+      // Taskはtitleプロパティ（Notion DBで"Task"がtitleの列想定）
+      properties["Task"] = {
+        title: [{ type: "text", text: { content: task } }]
       };
     }
 

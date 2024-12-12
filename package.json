@@ -1,6 +1,10 @@
 {
-    "dependencies": {
-      "@notionhq/client": "^2.2.6"
-    }
+  "name": "my-pomodoro-timer",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.6"
   }
-  
+}
