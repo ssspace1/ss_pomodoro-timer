@@ -3,37 +3,43 @@ html,body {
   height:100%; width:100%;
   font-family:'Space Grotesk',sans-serif; 
   color:#fff; 
-  background:none; 
+  background:none;
+  display:flex; flex-direction:column;
 }
+
 #bg-wrapper {
   position:fixed; top:0; left:0; right:0; bottom:0;
   background:#222;
   z-index:-1;
 }
+
 #top-bar {
+  flex:0 0 auto;
   display:flex; align-items:center; justify-content:space-between;
   padding:1rem;
-  flex:0 0 auto;
 }
+
 .logo { max-width:100px; }
 #daily-work-time {
   background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:5px;
   font-size:0.9rem; font-weight:600;
 }
 
-#main-content {
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+#pomodoro-container {
+  flex:1; 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  justify-content:center;
   text-align:center;
   gap:2rem;
 }
 
 .mode-selection {
-  display:inline-flex; gap:1rem;
-  align-items:center;
-  justify-content:center;
+  display:inline-flex; gap:1rem; align-items:center; justify-content:center;
 }
 .form-check {
-  display:inline-flex; 
+  display:inline-flex;
 }
 .form-check-input { display:none; }
 .form-check-label.btn {
