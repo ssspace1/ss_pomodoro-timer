@@ -29,14 +29,23 @@ html,body {
   font-size:0.9rem; font-weight:600;
 }
 
+.icon-button, .start-button {
+  display:inline-flex; align-items:center; justify-content:center; 
+  cursor:pointer; transition:background 0.3s;
+  border:none;
+}
 .icon-button {
-  background:rgba(255,255,255,0.1); border:none; cursor:pointer; border-radius:50%;
-  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
-  transition:background 0.3s;
-  color: #fff; 
+  background:rgba(255,255,255,0.1);
+  border-radius:50%; 
+  width:40px; height:40px; 
+  color:#fff;
 }
 .icon-button:hover {
   background:rgba(255,255,255,0.3);
+}
+.icon-button svg {
+  display:block; width:20px; height:20px;
+  stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
 }
 
 #pomodoro-container {
@@ -69,25 +78,35 @@ html,body {
 .timer-display {
   font-size:5rem; letter-spacing:-0.1rem;
 }
-
 #pomodoro-timer {
   font-size:5rem;
 }
 
 .action-buttons {
   display:flex; flex-direction:row; gap:1rem; align-items:center; justify-content:center;
+  flex-wrap:nowrap; /* keep horizontally aligned even if narrow */
 }
 
 .start-button {
-  display:inline-flex; align-items:center; gap:0.5rem;
-  background:#fff; color:#000; border:none; border-radius:42px; padding:0.5rem 1.5rem;
-  font-size:1rem; font-weight:600; cursor:pointer; transition:background 0.3s;
+  background:#fff; color:#000; border-radius:42px; padding:0.5rem 1.5rem;
+  font-size:1rem; font-weight:600;
+  gap:0.5rem;  
 }
 .start-button:hover {
   background:#ccc;
 }
+.start-button svg {
+  display:block; width:20px; height:20px;
+  stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+#start-text {
+  line-height:1; 
+}
 
-.hidden { display:none; }
+.hidden {
+  display:none !important;
+}
+
 
 .modal {
   position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:999;
@@ -131,22 +150,16 @@ html,body {
   background:#0f0; height:100%;
 }
 
-/* レスポンシブ: 幅が狭い時に縦に並べる */
+/* レスポンシブ: 横並びをキープするため特になし */
 @media(max-width:500px) {
   .mode-selection {
     flex-direction:column;
-  }
-  .action-buttons {
-    flex-direction:column; 
-  }
-  #top-bar {
-    justify-content:flex-end;
-  }
-  #pomodoro-container {
-    gap:1rem;
+    gap:0.5rem;
   }
   .start-button {
-    width:100%;
-    justify-content:center;
+    font-size:0.9rem;
+  }
+  #start-text {
+    font-size:0.9rem;
   }
 }

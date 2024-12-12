@@ -17,7 +17,7 @@
       </div>
       <button id="toggleDailyWork" class="icon-button" title="Hide/Show Today's Work">
         <!-- Eye icon -->
-        <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24">
           <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
           <circle cx="12" cy="12" r="3"/>
         </svg>
@@ -46,30 +46,39 @@
     </div>
 
     <div class="action-buttons">
-      <!-- Start button: larger, with text -->
+      <!-- Start button: with play/pause icons -->
       <button id="pomodoro-start" class="start-button" title="Start/Pause">
-        <svg id="play-icon" width="24" height="24" stroke="#000" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
+        <!-- Play (Feather: play) -->
+        <svg id="play-icon" viewBox="0 0 24 24">
+          <polygon points="5 3 19 12 5 21 5 3"/>
         </svg>
-        <svg id="pause-icon" class="hidden" width="24" height="24" stroke="#000" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+        <!-- Pause (Feather: pause), hidden by default -->
+        <svg id="pause-icon" class="hidden" viewBox="0 0 24 24">
+          <rect x="6" y="4" width="4" height="16"/>
+          <rect x="14" y="4" width="4" height="16"/>
         </svg>
         <span id="start-text">start</span>
       </button>
 
-      <!-- Reload (reset) -->
+      <!-- Reload (Feather: rotate-cw) -->
       <button id="pomodoro-stop" class="icon-button" title="Reset timer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        <svg viewBox="0 0 24 24">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15A9 9 0 1 1 21 10h-5"/>
+        </svg>
       </button>
 
-      <!-- Settings -->
+      <!-- Settings (Feather: settings) -->
       <button id="pomodoro-settings" class="icon-button" title="Settings">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        
       </button>
 
-      <!-- Stats -->
+      <!-- Stats (Feather: activity as stats icon) -->
       <button id="pomodoro-stats" class="icon-button" title="View Stats">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <svg viewBox="0 0 24 24">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
       </button>
     </div>
   </div>

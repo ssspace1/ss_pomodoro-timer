@@ -12,11 +12,11 @@ let userSettings = {
   theme:"default"
 };
 
-let isClockRunning=false;
-let isClockStopped=true;
-let currentTimeLeftInSession=25*60;
-let timerInterval=null;
-let currentTimerType="pomodoro";
+let isClockRunning = false;
+let isClockStopped = true;
+let currentTimeLeftInSession = 25*60;
+let timerInterval = null;
+let currentTimerType = "pomodoro";
 
 const dailyWorkDisplay = document.getElementById('dailyWorkDisplay');
 const timerDisplay = document.getElementById('pomodoro-timer');
@@ -52,7 +52,7 @@ if(Notification && Notification.permission==='default'){
 
 // サウンド
 const alertSound = new Audio("https://example.com/chime.mp3");
-alertSound.volume=1.0;
+alertSound.volume = 1.0;
 
 //////////////////////
 // 日付関数
@@ -105,20 +105,20 @@ function formatTime(seconds){
 let workSessionStart = null;
 
 function onTimerStart(){
-  if(currentTimerType==='pomodoro') {
+  if(currentTimerType === 'pomodoro') {
     workSessionStart = Date.now();
   } else {
-    workSessionStart=null;
+    workSessionStart = null;
   }
 }
 
 function onTimerStopOrPause(){
-  if(workSessionStart && currentTimerType==='pomodoro'){
+  if(workSessionStart && currentTimerType === 'pomodoro'){
     const elapsed = Math.floor((Date.now()-workSessionStart)/1000);
     dailyWorkLog.totalWorkSeconds += elapsed;
     saveWorkLogs();
     updateDailyWorkTimeDisplay();
-    workSessionStart=null;
+    workSessionStart = null;
   }
 }
 
@@ -126,9 +126,9 @@ function onTimerStopOrPause(){
 function getInitialTimeForMode(){
   const mode = document.querySelector('input[name="timerType"]:checked').value;
   currentTimerType=mode;
-  let t= userSettings.pomodoro;
-  if(mode==='short') t=userSettings.short;
-  if(mode==='long') t=userSettings.long;
+  let t = userSettings.pomodoro;
+  if(mode==='short') t = userSettings.short;
+  if(mode==='long') t = userSettings.long;
   return t*60;
 }
 
@@ -154,13 +154,14 @@ function tick(){
 
 function toggleClock(reset){
   if(reset){
+    // リセット時は必ずplay表示, pause非表示
     isClockStopped=true;
     isClockRunning=false;
     clearInterval(timerInterval);
     timerInterval=null;
     currentTimeLeftInSession=getInitialTimeForMode();
     updateTimerDisplay();
-    // アイコン戻す
+
     playIcon.classList.remove('hidden');
     pauseIcon.classList.add('hidden');
     onTimerStopOrPause();
@@ -168,16 +169,16 @@ function toggleClock(reset){
   }
 
   if(isClockRunning){
-    // Pause
+    // 一時停止時はplay表示, pause非表示
     isClockRunning=false;
     clearInterval(timerInterval);
     timerInterval=null;
-    // アイコン戻す
+
     playIcon.classList.remove('hidden');
     pauseIcon.classList.add('hidden');
     onTimerStopOrPause();
   } else {
-    // Start
+    // 開始時はpause表示, play非表示
     if(isClockStopped){
       currentTimeLeftInSession=getInitialTimeForMode();
       updateTimerDisplay();
@@ -190,6 +191,7 @@ function toggleClock(reset){
     timerInterval=setInterval(tick,1000);
   }
 }
+
 
 // タイマー完了時処理
 document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>{
@@ -268,19 +270,17 @@ settingsBtn.addEventListener('click', ()=>{
   settingsModal.classList.remove('hidden');
 });
 saveSettingsBtn.addEventListener('click', ()=>{
-  userSettings.pomodoro=parseInt(pomodoroLengthInput.value,10);
-  userSettings.short=parseInt(shortBreakLengthInput.value,10);
-  userSettings.long=parseInt(longBreakLengthInput.value,10);
-  userSettings.playSound=playSoundCheck.checked;
-  userSettings.theme=themeSelect.value;
+  userSettings.pomodoro = parseInt(pomodoroLengthInput.value,10);
+  userSettings.short = parseInt(shortBreakLengthInput.value,10);
+  userSettings.long = parseInt(longBreakLengthInput.value,10);
+  userSettings.playSound = playSoundCheck.checked;
+  userSettings.theme = themeSelect.value;
   saveUserSettings();
   applyTheme(userSettings.theme);
   settingsModal.classList.add('hidden');
-  toggleClock(true);
+  // toggleClock(true); は呼ばない
 });
-closeSettingsBtn.addEventListener('click',()=>{
-  settingsModal.classList.add('hidden');
-});
+
 
 // Stats Modal
 statsBtn.addEventListener('click', ()=>{
@@ -367,18 +367,6 @@ function populateStatsList(container, data){
   });
 }
 
-// 初期読み込み
-document.addEventListener('DOMContentLoaded', ()=>{
-  loadWorkLogs();
-  loadUserSettings();
-  applyTheme(userSettings.theme);
-  updateDailyWorkTimeDisplay();
-  updateTimerDisplay();
-});
-
-
-
-
 document.addEventListener('DOMContentLoaded', ()=>{
   loadWorkLogs();
   loadUserSettings();
@@ -408,4 +396,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
     `;
   });
 });
-
