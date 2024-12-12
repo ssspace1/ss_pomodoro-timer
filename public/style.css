@@ -33,6 +33,7 @@ html,body {
   background:rgba(255,255,255,0.1); border:none; cursor:pointer; border-radius:50%;
   width:32px; height:32px; display:flex; align-items:center; justify-content:center;
   transition:background 0.3s;
+  color: #fff; 
 }
 .icon-button:hover {
   background:rgba(255,255,255,0.3);
@@ -46,6 +47,7 @@ html,body {
   justify-content:center;
   text-align:center;
   gap:2rem;
+  padding:1rem;
 }
 
 .mode-selection {
@@ -76,7 +78,14 @@ html,body {
   display:flex; flex-direction:row; gap:1rem; align-items:center; justify-content:center;
 }
 
-/* ボタンはicon-buttonクラスで統一 */
+.start-button {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  background:#fff; color:#000; border:none; border-radius:42px; padding:0.5rem 1.5rem;
+  font-size:1rem; font-weight:600; cursor:pointer; transition:background 0.3s;
+}
+.start-button:hover {
+  background:#ccc;
+}
 
 .hidden { display:none; }
 
@@ -120,4 +129,24 @@ html,body {
 }
 .bar {
   background:#0f0; height:100%;
+}
+
+/* レスポンシブ: 幅が狭い時に縦に並べる */
+@media(max-width:500px) {
+  .mode-selection {
+    flex-direction:column;
+  }
+  .action-buttons {
+    flex-direction:column; 
+  }
+  #top-bar {
+    justify-content:flex-end;
+  }
+  #pomodoro-container {
+    gap:1rem;
+  }
+  .start-button {
+    width:100%;
+    justify-content:center;
+  }
 }

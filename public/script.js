@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 
-// 既存コード + 下記追加
+
 
 document.addEventListener('DOMContentLoaded', ()=>{
   loadWorkLogs();
@@ -392,17 +392,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
   toggleDailyWorkBtn.addEventListener('click', ()=>{
     dailyWorkVisible = !dailyWorkVisible;
     dailyWorkTime.style.display = dailyWorkVisible ? 'inline-block' : 'none';
-    // アイコンも変更（目→目隠し）したい場合は下記切替
-    toggleDailyWorkBtn.innerHTML = dailyWorkVisible ? `
-      <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
-    ` : `
-      <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M2 2l20 20M9.88 9.88A3 3 0 0114.12 14.12"/>
-        <path d="M1 12s4-7 11-7c2.5 0 4.78.75 6.65 2M23 12s-4 7-11 7c-2.5 0-4.78-.75-6.65-2"/>
-      </svg>
+    toggleDailyWorkBtn.innerHTML = dailyWorkVisible ?
+    `
+    <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    `
+    :
+    `
+    <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <path d="M2 2l20 20M9.88 9.88a3 3 0 014.24 4.24"/>
+      <path d="M1 12s4-7 11-7c2.5 0 4.78.75 6.65 2M23 12s-4 7-11 7c-2.5 0-4.78-.75-6.65-2"/>
+    </svg>
     `;
   });
 });
+

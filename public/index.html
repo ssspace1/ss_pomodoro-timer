@@ -17,7 +17,7 @@
       </div>
       <button id="toggleDailyWork" class="icon-button" title="Hide/Show Today's Work">
         <!-- Eye icon -->
-        <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
+        <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
           <circle cx="12" cy="12" r="3"/>
         </svg>
@@ -46,40 +46,30 @@
     </div>
 
     <div class="action-buttons">
-      <!-- Start/Pause -->
-      <button id="pomodoro-start" class="icon-button" title="Start/Pause">
-        <svg id="play-icon" width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
+      <!-- Start button: larger, with text -->
+      <button id="pomodoro-start" class="start-button" title="Start/Pause">
+        <svg id="play-icon" width="24" height="24" stroke="#000" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <path d="M8 5v14l11-7z"/>
         </svg>
-        <svg id="pause-icon" class="hidden" width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
+        <svg id="pause-icon" class="hidden" width="24" height="24" stroke="#000" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
         </svg>
+        <span id="start-text">start</span>
       </button>
 
-      <!-- Reload -->
+      <!-- Reload (reset) -->
       <button id="pomodoro-stop" class="icon-button" title="Reset timer">
-        <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M20 11a8.1 8.1 0 00-15.5-2M4 4v5h5"/>
-          <circle cx="12" cy="12" r="8"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
       </button>
 
       <!-- Settings -->
       <button id="pomodoro-settings" class="icon-button" title="Settings">
-        <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.74 1.74 0 00.33 1.82l.06.06a2 2 0 01-.94 3.37A2 2 0 0117 21a2.09 2.09 0 00-1-.27 2 2 0 00-1.35.53l-.06.06a1.74 1.74 0 00-.33 1.82L14 23a2 2 0 01-2 2 2 2 0 01-2-2l-.06-.06a1.74 1.74 0 00-1.82-.33H7a2 2 0 01-3.37-.94 2 2 0 01.27-1 2.09 2.09 0 00-.53-1.35l-.06-.06a1.74 1.74 0 00-1.82-.33H1a2 2 0 01-2-2 2 2 0 012-2l.06-.06a1.74 1.74 0 00.33-1.82V9a2 2 0 013.37-.94 2 2 0 011 1 2.09 2.09 0 001.35-.53l.06-.06a1.74 1.74 0 001.82-.33H9a2 2 0 012-2 2 2 0 012 2h.06a1.74 1.74 0 001.82.33l.06-.06A2.09 2.09 0 0017 7a2 2 0 012 2v.06a1.74 1.74 0 00.33 1.82l.06.06a2.09 2.09 0 001.35.53 2 2 0 012 2z"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
 
       <!-- Stats -->
       <button id="pomodoro-stats" class="icon-button" title="View Stats">
-        <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M3 3v18h18"/>
-          <rect x="7" y="10" width="2" height="5"/>
-          <rect x="11" y="6" width="2" height="9"/>
-          <rect x="15" y="4" width="2" height="11"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
       </button>
     </div>
   </div>
