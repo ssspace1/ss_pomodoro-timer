@@ -15,14 +15,27 @@ html,body {
 
 #top-bar {
   flex:0 0 auto;
-  display:flex; align-items:center; justify-content:space-between;
+  display:flex; align-items:center; justify-content:flex-end;
   padding:1rem;
+  gap:0.5rem;
 }
 
-.logo { max-width:100px; }
+#daily-work-container {
+  display:flex; align-items:center; gap:0.5rem;
+}
+
 #daily-work-time {
   background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:5px;
   font-size:0.9rem; font-weight:600;
+}
+
+.icon-button {
+  background:rgba(255,255,255,0.1); border:none; cursor:pointer; border-radius:50%;
+  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  transition:background 0.3s;
+}
+.icon-button:hover {
+  background:rgba(255,255,255,0.3);
 }
 
 #pomodoro-container {
@@ -38,6 +51,7 @@ html,body {
 .mode-selection {
   display:inline-flex; gap:1rem; align-items:center; justify-content:center;
 }
+
 .form-check {
   display:inline-flex;
 }
@@ -62,26 +76,8 @@ html,body {
   display:flex; flex-direction:row; gap:1rem; align-items:center; justify-content:center;
 }
 
-.btn {
-  border:1px solid #fff; border-radius:42px; background:#fff; color:#000;
-  font-size:1rem; cursor:pointer; padding:0.5rem 1rem; text-transform:lowercase; font-weight:600; transition:0.3s;
-}
-.btn-primary {
-  background:#fff; color:#000;
-}
-.btn:hover {
-  background:#333; color:#fff;
-}
-.no-style {
-  background:none; border:none; cursor:pointer;
-}
-.bg-transparent {
-  background:rgba(255,255,255,0.1); border-radius:50%; width:42px; height:42px; 
-  display:flex; align-items:center; justify-content:center;
-}
-.bg-transparent:hover {
-  background:rgba(255,255,255,0.3);
-}
+/* ボタンはicon-buttonクラスで統一 */
+
 .hidden { display:none; }
 
 .modal {
