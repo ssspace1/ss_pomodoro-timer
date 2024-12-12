@@ -223,12 +223,39 @@ function loadUserSettings(){
 function saveUserSettings(){
   localStorage.setItem('userSettings', JSON.stringify(userSettings));
 }
+
+// 新たなautoテーマ対応の関数
 function applyTheme(theme){
-  const bg = document.getElementById('bg-image');
-  if(theme==='forest') bg.src="https://example.com/forest.jpg";
-  else if(theme==='cafe') bg.src="https://example.com/cafe.jpg";
-  else if(theme==='night') bg.src="https://example.com/night.jpg";
-  else bg.src="https://example.com/default.jpg";
+  const bgWrapper = document.getElementById('bg-wrapper');
+  if(theme==='auto'){
+    applyAutoTheme();
+  } else if(theme==='forest'){
+    bgWrapper.style.backgroundColor = '#334f33'; 
+  } else if(theme==='cafe'){
+    bgWrapper.style.backgroundColor = '#4f3f33'; 
+  } else if(theme==='night'){
+    bgWrapper.style.backgroundColor = '#3a3a3a';
+  } else {
+    bgWrapper.style.backgroundColor = '#222';
+  }
+}
+
+// autoモードで時間帯に応じて背景色を変更
+function applyAutoTheme(){
+  const bgWrapper = document.getElementById('bg-wrapper');
+  const hour = new Date().getHours();
+  let color;
+  // 3時間毎に区切る
+  if(hour>=0 && hour<3) color='#2f2f2f';
+  else if(hour>=3 && hour<6) color='#33404f';
+  else if(hour>=6 && hour<9) color='#8799a1';
+  else if(hour>=9 && hour<12) color='#b0bec5';
+  else if(hour>=12 && hour<15) color='#cfd8dc';
+  else if(hour>=15 && hour<18) color='#d3b89f';
+  else if(hour>=18 && hour<21) color='#556a71';
+  else color='#3a3a3a';
+
+  bgWrapper.style.backgroundColor = color;
 }
 
 // Settings Modal
@@ -340,7 +367,6 @@ function populateStatsList(container, data){
   });
 }
 
-
 // 初期読み込み
 document.addEventListener('DOMContentLoaded', ()=>{
   loadWorkLogs();
@@ -349,4 +375,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
   updateDailyWorkTimeDisplay();
   updateTimerDisplay();
 });
-
