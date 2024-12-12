@@ -3,41 +3,39 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pomodoro Timer with Auto Monotone Theme</title>
+  <title>Pomodoro Timer (Auto Monotone Theme)</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Inter:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div id="bg-wrapper">
-    <div id="player"></div>
+  <div id="bg-wrapper"></div>
+
+  <div id="top-bar">
+    <img class="logo" src="https://via.placeholder.com/100x40?text=LOGO" alt="Logo"/>
+    <div id="daily-work-time">Today's Work: <span id="dailyWorkDisplay">00:00:00</span></div>
   </div>
 
-  <div id="top">
-    <div id="top-left">
-      <img class="logo" src="https://example.com/logo.png" alt="Logo"/>
-    </div>
-    <div id="top-right"></div>
-  </div>
-
-  <div id="pomodoro-container">
-    <div id="pomodoro-durations">
-      <div class="form-check">
+  <div id="main-content">
+    <div class="mode-selection">
+      <label class="form-check">
         <input class="form-check-input" type="radio" name="timerType" value="pomodoro" checked>
-        <label class="form-check-label btn">pomodoro</label>
-      </div>
-      <div class="form-check">
+        <span class="form-check-label btn">pomodoro</span>
+      </label>
+      <label class="form-check">
         <input class="form-check-input" type="radio" name="timerType" value="short">
-        <label class="form-check-label btn">short break</label>
-      </div>
-      <div class="form-check">
+        <span class="form-check-label btn">short break</span>
+      </label>
+      <label class="form-check">
         <input class="form-check-input" type="radio" name="timerType" value="long">
-        <label class="form-check-label btn">long break</label>
-      </div>
+        <span class="form-check-label btn">long break</span>
+      </label>
     </div>
 
-    <div id="pomodoro-timer">25:00</div>
+    <div class="timer-display">
+      <div id="pomodoro-timer">25:00</div>
+    </div>
 
-    <div id="pomodoro-clock-actions">
+    <div class="action-buttons">
       <button id="pomodoro-start" class="btn btn-primary">
         <span id="play-icon">▶</span>
         <span id="pause-icon" class="hidden">⏸</span>
@@ -60,30 +58,17 @@
     </div>
   </div>
 
-  <div id="daily-work-time">
-    Today's Work: <span id="dailyWorkDisplay">00:00:00</span>
-  </div>
-
   <!-- Settings Modal -->
   <div id="settingsModal" class="modal hidden">
     <div class="modal-content">
       <h2>Settings</h2>
-      <label>
-        Pomodoro (min): <input type="number" id="pomodoroLength" min="1" max="90" value="25"/>
-      </label><br/>
-      <label>
-        Short Break (min): <input type="number" id="shortBreakLength" min="1" max="30" value="5"/>
-      </label><br/>
-      <label>
-        Long Break (min): <input type="number" id="longBreakLength" min="1" max="60" value="10"/>
-      </label><br/>
-      <label>
-        Play sound on finish: <input type="checkbox" id="playSoundCheck" checked>
-      </label><br/>
-      <label>
-        Theme:
+      <label>Pomodoro (min): <input type="number" id="pomodoroLength" min="1" max="90" value="25"/></label><br/>
+      <label>Short Break (min): <input type="number" id="shortBreakLength" min="1" max="30" value="5"/></label><br/>
+      <label>Long Break (min): <input type="number" id="longBreakLength" min="1" max="60" value="10"/></label><br/>
+      <label>Play sound on finish: <input type="checkbox" id="playSoundCheck" checked></label><br/>
+      <label>Theme:
         <select id="themeSelect">
-          <option value="default">Default (Manual)</option>
+          <option value="default">Default</option>
           <option value="forest">Forest</option>
           <option value="cafe">Cafe</option>
           <option value="night">Night</option>
@@ -107,23 +92,19 @@
         <button class="stats-tab-btn" data-target="#stats-weekly">Weekly</button>
         <button class="stats-tab-btn" data-target="#stats-monthly">Monthly</button>
       </div>
-
       <div class="stats-tab-content">
         <div id="stats-daily" class="stats-tab-pane active">
           <p>Today's total: <span id="statsDailyTotal">00:00:00</span></p>
         </div>
-
         <div id="stats-weekly" class="stats-tab-pane">
           <h3>Last 7 Days</h3>
           <div class="stats-list" id="statsWeeklyList"></div>
         </div>
-
         <div id="stats-monthly" class="stats-tab-pane">
           <h3>Last 30 Days</h3>
           <div class="stats-list" id="statsMonthlyList"></div>
         </div>
       </div>
-
       <div class="modal-actions">
         <button id="closeStatsBtn" class="btn">Close</button>
       </div>
