@@ -3,33 +3,36 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Custom Pomodoro Timer</title>
-  <link rel="stylesheet" href="./style.css"/>
+  <title>Pomodoro Timer</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23E74C3C%22/></svg>">
 </head>
 <body>
-  <div class="container">
+  <div class="wrapper">
     <h1>Pomodoro Timer</h1>
     <div class="timer-display">25:00</div>
+
     <div class="controls">
       <button id="startBtn">Start</button>
       <button id="pauseBtn">Pause</button>
       <button id="resetBtn">Reset</button>
     </div>
+
     <div class="settings">
       <label>
-        Work (min): 
-        <input type="number" id="workTime" value="25" min="1"/>
+        Work (min):
+        <input type="number" id="workTime" value="25" min="1">
       </label>
       <label>
-        Break (min): 
-        <input type="number" id="breakTime" value="5" min="1"/>
+        Break (min):
+        <input type="number" id="breakTime" value="5" min="1">
       </label>
       <label>
-        Task Name: 
-        <input type="text" id="taskName" placeholder="(optional)"/>
+        Task Name:
+        <input type="text" id="taskName" placeholder="(optional)">
       </label>
     </div>
   </div>
-  <script src="./script.js"></script>
+  <script src="./script.js" defer></script>
 </body>
 </html>

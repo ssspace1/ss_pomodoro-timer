@@ -1,31 +1,81 @@
 body {
-    margin:0; padding:0; font-family: sans-serif; background:#f0f0f0; display:flex; align-items:center; justify-content:center; height:100vh;
-  }
-  
-  .container {
-    background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);
-    text-align:center; max-width:300px; width:100%;
-  }
-  
-  .timer-display {
-    font-size:3rem;
-    margin:20px 0;
-  }
-  
-  .controls button {
-    margin:5px; padding:10px 20px; font-size:1rem; border:none; border-radius:5px;
-    background:#ddd; cursor:pointer;
-  }
-  
-  .settings {
-    margin-top:20px; text-align:left;
-  }
-  
-  .settings label {
-    display:block; margin-bottom:10px;
-  }
-  
-  .settings input {
-    width:60px;
-  }
-  
+  margin:0; 
+  padding:0; 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: #222;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:100vh;
+}
+
+.wrapper {
+  background: #333;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+h1 {
+  margin:0 0 20px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.timer-display {
+  font-size: 3rem;
+  margin: 20px 0;
+  letter-spacing: 1px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls button {
+  margin:5px; 
+  padding:10px 20px; 
+  font-size:1rem; 
+  border:none; 
+  border-radius:5px;
+  background:#555; 
+  color:#fff;
+  cursor:pointer;
+  transition: background 0.3s;
+}
+
+.controls button:hover {
+  background: #777;
+}
+
+.settings {
+  text-align:left; 
+  margin-top:20px;
+}
+
+.settings label {
+  display:block; 
+  margin-bottom:10px;
+  font-size:0.9rem;
+}
+
+.settings input[type="number"],
+.settings input[type="text"] {
+  width:60px; 
+  padding:5px;
+  background:#444;
+  border:1px solid #555;
+  border-radius:4px;
+  color:#fff;
+  margin-left:10px;
+}
+.settings input[type="text"] {
+  width:100px;
+}
+.settings input:focus {
+  outline: none;
+  border-color:#888;
+}

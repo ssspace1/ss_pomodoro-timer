@@ -1,4 +1,4 @@
-// 要素取得
+// DOM要素取得
 const timerDisplay = document.querySelector('.timer-display');
 const startBtn = document.getElementById('startBtn');
 const pauseBtn = document.getElementById('pauseBtn');
@@ -8,7 +8,7 @@ const breakInput = document.getElementById('breakTime');
 const taskNameInput = document.getElementById('taskName');
 
 let isWorkMode = true;
-let remainingSeconds = 25 * 60;
+let remainingSeconds = parseInt(workInput.value,10)*60;
 let timerInterval = null;
 
 function updateDisplay() {
@@ -28,8 +28,9 @@ function tick() {
 }
 
 function startTimer() {
-  if (timerInterval) return; 
-  timerInterval = setInterval(tick, 1000);
+  if (!timerInterval) {
+    timerInterval = setInterval(tick, 1000);
+  }
 }
 
 function pauseTimer() {
@@ -45,12 +46,12 @@ function resetTimer() {
 }
 
 function onSessionEnd() {
-  // セッション終了時の記録送信
   const duration = isWorkMode ? parseInt(workInput.value,10) : parseInt(breakInput.value,10);
   const mode = isWorkMode ? 'Work' : 'Break';
-  const taskName = taskNameInput.value.trim();
+  const task = taskNameInput.value.trim();
 
-  sendSessionDataToServer(duration, mode, taskName);
+  // Notion記録用APIコール
+  sendSessionDataToServer(duration, mode, task);
 
   // モード切替
   isWorkMode = !isWorkMode;
@@ -70,13 +71,18 @@ function sendSessionDataToServer(duration, mode, task) {
     })
   })
   .then(res => res.json())
-  .then(data => console.log('Recorded:', data))
-  .catch(err => console.error('Error recording session:', err));
+  .then(data => {
+    console.log('Notion record success:', data);
+  })
+  .catch(err => {
+    console.error('Notion record error:', err);
+  });
 }
 
+// イベント設定
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
 
-// 初期表示更新
-resetTimer();
+// 初期表示
+updateDisplay();
