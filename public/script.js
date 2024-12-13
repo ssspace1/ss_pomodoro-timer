@@ -195,15 +195,19 @@ document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>
   }
 });
 
-function sendSessionToNotion(duration, mode, task) {
+function sendSessionToNotion(durationInMin, mode, task) {
+  // Python例に合わせて記録。今度はTask(title), Date(date), Description(rich_text)で行う
+  const timestamp = new Date().toISOString();
+
   fetch('/api/record-session', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-      timestamp: new Date().toISOString(),
-      duration: duration,
+      timestamp: timestamp,
+      duration: durationInMin,
       mode: mode,
-      task: task || ''
+      task: task || '',
+      // ここでPython例と同様Name/Descriptionを使うためにAPI側も変更が必要
     })
   })
   .then(res=>res.json())
@@ -214,6 +218,7 @@ function sendSessionToNotion(duration, mode, task) {
     console.error('Notion record error:',err);
   });
 }
+
 
 // Radioボタン変更でモード切替
 const timerTypeInputs = document.querySelectorAll('input[name="timerType"]');

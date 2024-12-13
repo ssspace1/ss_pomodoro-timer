@@ -15,16 +15,24 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Pythonコードに合わせて、Name, Date, Descriptionを使う形に変更
+    // タイトル: Name(title)
+    // 日付: Date(date)
+    // 説明: Description(rich_text)
+    // DurationやTypeを使いたい場合は後でプロパティ追加
     const properties = {
-      "Date": { date: { start: timestamp } },
-      "Duration": { number: duration },
-      "Type": { select: { name: mode } }
+      "Name": {
+        "title": [
+          { "type": "text", "text": { "content": task || "Untitled" } }
+        ]
+      },
+      "Date": { "date": { "start": timestamp } },
+      "Description": {
+        "rich_text": [
+          { "type": "text", "text": { "content": `Mode: ${mode}, Duration: ${duration}min` } }
+        ]
+      }
     };
-    if (task && task.trim() !== "") {
-      properties["Task"] = {
-        title: [{ type: "text", text: { content: task } }]
-      };
-    }
 
     await notion.pages.create({
       parent: { database_id: databaseId },
@@ -35,8 +43,6 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Notion API error:', error);
     console.log("Received data:", req.body);
-// ... Notion API call ...
-
     res.status(500).json({error: "Failed to write to Notion"});
   }
 }
