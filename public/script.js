@@ -179,21 +179,34 @@ function toggleClock(reset){
 
 // タイマー完了時
 document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>{
-  if(userSettings.playSound){
-    alertSound.currentTime=0;
+  // ポモドーロ終了時
+  if (userSettings.playSound){
     alertSound.play();
   }
-  if(Notification.permission==='granted'){
+
+  if (Notification.permission==='granted'){
     new Notification("Pomodoro Finished!",{body:"Time for a break!"});
   }
 
-  // Notion連携: pomodoro終了時記録
-  if(currentTimerType==='pomodoro' && workSessionStart) {
-    const elapsed = Math.floor((Date.now()-workSessionStart)/1000);
-    const durationInMin = Math.round(elapsed/60);
-    sendSessionToNotion(durationInMin, 'Work', '');
-  }
-});
+  // Notionへ記録送信
+  const timestamp = new Date().toISOString(); // 今の時刻
+  const durationInMin = 25; // ここは実際の経過分数に合わせて計算済みである想定
+  const mode = "Work"; // 作業だった場合
+  const task = "Coding session"; // ここは適宜変える
+
+  fetch('/api/record-session', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ timestamp, duration: durationInMin, mode, task })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    console.log("Notion記録結果:", data);
+  })
+  .catch(err=>{
+    console.error("Notion記録エラー:", err);
+  });
+
 
 function sendSessionToNotion(durationInMin, mode, task) {
   // Python例に合わせて記録。今度はTask(title), Date(date), Description(rich_text)で行う
