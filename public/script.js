@@ -219,6 +219,44 @@ function sendSessionToNotion(durationInMin, mode, task) {
   });
 }
 
+const recordNowBtn = document.getElementById('recordNowBtn');
+recordNowBtn.addEventListener('click', ()=> {
+  // ボタンが押された時点の経過時間を取得し、Notionへ送る処理をここに書く
+  nowRecord();
+});
+
+function nowRecord() {
+  let durationInMin = Math.floor(dailyWorkLog.totalWorkSeconds / 60);
+  // あるいは現在セッション中なら(経過中を加算)
+  // if (isClockRunning && workSessionStart) {
+  //   const elapsed = Math.floor((Date.now()-workSessionStart)/1000);
+  //   durationInMin = Math.floor((dailyWorkLog.totalWorkSeconds + elapsed)/60);
+  // }
+
+  const timestamp = new Date().toISOString();
+  const mode = currentTimerType === 'pomodoro' ? "Work" : currentTimerType;
+  const task = "Some Task Name"; // ユーザーが設定で入力できるようにしてもいい
+
+  fetch('/api/record-session', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ timestamp, duration: durationInMin, mode, task })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.message==="Success") {
+      console.log("Notionへの記録成功");
+      // 必要なら画面上に"記録成功"メッセージを表示する処理を追加
+    } else {
+      console.error("Notion記録失敗:", data);
+      // エラーメッセージをUI表示するならここで処理
+    }
+  })
+  .catch(err=>{
+    console.error("Notion記録中エラー:", err);
+  });
+}
+
 
 // Radioボタン変更でモード切替
 const timerTypeInputs = document.querySelectorAll('input[name="timerType"]');
