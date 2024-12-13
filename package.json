@@ -1,5 +1,5 @@
 {
-  "name": "my-pomodoro-timer",
+  "name": "ss_pomodoro-timer",
   "version": "1.0.0",
   "scripts": {
     "start": "vercel dev"
