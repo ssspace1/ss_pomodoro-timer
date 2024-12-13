@@ -1,35 +1,30 @@
 // script.js
 
 // ==========================
-// 基本的な設定・変数定義
+// 基本設定・変数定義
 // ==========================
 
-// ユーザー設定(初期値)
 let userSettings = {
-  pomodoro: 25,     // ポモドーロ時間(分)
-  short: 5,         // ショートブレイク時間(分)
-  long: 10,         // ロングブレイク時間(分)
-  playSound: true,  // 終了時に音を鳴らす
+  pomodoro: 25,
+  short: 5,
+  long: 10,
+  playSound: true,
   theme: "default",
-  autoRecordDaily: false // デイリーを自動記録するか(オプション)
+  autoRecordDaily: false
 };
 
-// 今のモードとタイマー状態を表す変数
-let isClockRunning = false;   // タイマーが動いているか
-let isClockStopped = true;    // タイマーが停止中か(リセット状態)
-let currentTimerType = "pomodoro"; // 今のモード(pomodoro, short, long)
-
-// タイマー残り秒数
+let isClockRunning = false;
+let isClockStopped = true;
+let currentTimerType = "pomodoro";
 let currentTimeLeftInSession = userSettings.pomodoro * 60;
-// タイマーを進めるintervalのID
 let timerInterval = null;
 
-// 作業時間計測用(一日の合計作業時間を記録)
-let workLogs = []; 
-let dailyWorkLog = { date:getTodayDateStr(), totalWorkSeconds:0 };
+// 実作業ログ管理
+let workLogs = [];
+let dailyWorkLog = { date: getTodayDateStr(), totalWorkSeconds: 0 };
 loadWorkLogs();
 
-// 実際の作業開始時間を記録(ポモドーロモード中のみ)
+// ポモドーロ開始時刻記録用(Workモード時のみ)
 let workSessionStart = null;
 
 // 要素取得
@@ -42,7 +37,6 @@ const statsBtn = document.getElementById('pomodoro-stats');
 const playIcon = document.getElementById('play-icon');
 const pauseIcon = document.getElementById('pause-icon');
 
-// セッティングモーダル関連
 const settingsModal = document.getElementById('settingsModal');
 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 const closeSettingsBtn = document.getElementById('closeSettingsBtn');
@@ -54,29 +48,18 @@ const themeSelect = document.getElementById('themeSelect');
 const autoRecordDailyCheck = document.getElementById('autoRecordDailyCheck');
 const recordNowBtn = document.getElementById('recordNowBtn');
 
-// 統計モーダル関連
 const statsModal = document.getElementById('statsModal');
 const closeStatsBtn = document.getElementById('closeStatsBtn');
 const statsDailyTotal = document.getElementById('statsDailyTotal');
 const statsWeeklyList = document.getElementById('statsWeeklyList');
 const statsMonthlyList = document.getElementById('statsMonthlyList');
 
-//
-const endTime = new Date(timestamp); // 終了時刻(Dateオブジェクト)
-const startTime = new Date(endTime.getTime() - duration*60000); 
-// duration分前に戻す (60000ms=1分)
-
-const startIso = startTime.toISOString(); 
-const endIso = endTime.toISOString();
-
-
-
 // サウンド
 const alertSound = new Audio("https://example.com/chime.mp3");
 alertSound.volume = 1.0;
 
-// Notification 許可要求(初回のみ)
-if(Notification && Notification.permission === 'default'){
+// 通知権限要求
+if (Notification && Notification.permission === 'default') {
   Notification.requestPermission();
 }
 
@@ -84,24 +67,21 @@ if(Notification && Notification.permission === 'default'){
 // 関数定義
 // ==========================
 
-// 今日の日付文字列(YYYY-MM-DD)を返す
-function getTodayDateStr(){
+function getTodayDateStr() {
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-// ローカルストレージから作業ログ読み込み
-function loadWorkLogs(){
+function loadWorkLogs() {
   const w = localStorage.getItem('workLogs');
-  if(w) {
+  if (w) {
     workLogs = JSON.parse(w);
   } else {
     workLogs = [];
   }
-
   const today = getTodayDateStr();
-  let todayLog = workLogs.find(l=>l.date===today);
-  if(!todayLog) {
+  let todayLog = workLogs.find(l => l.date===today);
+  if (!todayLog) {
     todayLog = {date:today, totalWorkSeconds:0};
     workLogs.push(todayLog);
     saveWorkLogs();
@@ -109,83 +89,87 @@ function loadWorkLogs(){
   dailyWorkLog = todayLog;
 }
 
-// ローカルストレージに作業ログ保存
-function saveWorkLogs(){
+function saveWorkLogs() {
   localStorage.setItem('workLogs', JSON.stringify(workLogs));
 }
 
-// デイリー作業表示更新
-function updateDailyWorkTimeDisplay(){
+function updateDailyWorkTimeDisplay() {
   dailyWorkDisplay.textContent = formatTime(dailyWorkLog.totalWorkSeconds);
 }
 
-// 秒→HH:MM:SS形式の文字列に変換
-function formatTime(seconds){
+function formatTime(seconds) {
   const h = Math.floor(seconds/3600);
   const m = Math.floor((seconds%3600)/60);
   const s = seconds%60;
   return [h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
 }
 
-// タイマー表示を更新
-function updateTimerDisplay(){
+function updateTimerDisplay() {
   const min = String(Math.floor(currentTimeLeftInSession/60)).padStart(2,'0');
   const sec = String(currentTimeLeftInSession%60).padStart(2,'0');
   timerDisplay.textContent = `${min}:${sec}`;
 }
 
-// タイマーが1秒進むたびに呼ばれる
-function tick(){
+// 1秒ごと呼ばれる
+function tick() {
   currentTimeLeftInSession--;
   updateTimerDisplay();
-  if(currentTimeLeftInSession <= 0){
+  if (currentTimeLeftInSession <= 0) {
     clearInterval(timerInterval);
     timerInterval = null;
-    onTimerEnd(); // タイマー終了時の処理
+    onTimerEnd();
   }
 }
 
-// タイマー終了時処理
-function onTimerEnd(){
-  // 音を鳴らす
-  if(userSettings.playSound){
+// タイマー終了処理
+function onTimerEnd() {
+  // 音
+  if (userSettings.playSound) {
     alertSound.currentTime = 0;
     alertSound.play();
   }
-
-  // 通知送る
-  if(Notification.permission==='granted'){
+  // 通知
+  if (Notification.permission === 'granted') {
     new Notification("Pomodoro Finished!", {body:"Time for a break!"});
   }
 
-  // ポモドーロ中だった場合、Notionに記録を送る
-  if(currentTimerType === 'pomodoro' && workSessionStart) {
-    const elapsed = Math.floor((Date.now()-workSessionStart)/1000); // 経過秒
-    addElapsedToDailyLog(elapsed); // 合計作業時間に追加
+  // ポモドーロ中ならNotionへ記録
+  if (currentTimerType === 'pomodoro' && workSessionStart) {
+    const end = Date.now();
+    const elapsedSec = Math.floor((end - workSessionStart)/1000);
+    addElapsedToDailyLog(elapsedSec);
     updateDailyWorkTimeDisplay();
-    workSessionStart = null; 
-    const durationInMin = Math.round(elapsed/60);
-    sendSessionToNotion(durationInMin, "Work", "My Task");
+    workSessionStart = null;
+
+    // duration(分)
+    const durationInMin = Math.round(elapsedSec/60);
+    const timestamp = new Date().toISOString(); // 終了時刻をtimestampとする
+
+    // mode決定
+    let mode = "Work";
+    if (currentTimerType === 'short') mode = "Short Break";
+    if (currentTimerType === 'long') mode = "Long Break";
+
+    // taskは固定にする(必要ならUI追加可能)
+    const task = "Default Task";
+
+    sendSessionToNotion(timestamp, durationInMin, mode, task);
   }
 
-  // タイマー停止状態にする
   toggleClock(true);
 }
 
-// ポモドーロ開始時（resume時）に呼ぶ処理
-function onTimerStart(){
-  if(currentTimerType === 'pomodoro') {
-    // 作業セッション開始時間を記録
+function onTimerStart() {
+  if (currentTimerType === 'pomodoro') {
     workSessionStart = Date.now();
   } else {
     workSessionStart = null;
   }
 }
 
-// タイマー一時停止や停止、リセット時に呼ぶ処理
-function onTimerStopOrPause(){
-  // ポモドーロ中でworkSessionStartがある場合のみ、elapsedを計算
-  if(workSessionStart && currentTimerType === 'pomodoro'){
+function onTimerStopOrPause() {
+  // 作業中だった場合、その分を加算
+  if (workSessionStart && currentTimerType === 'pomodoro') {
     const elapsed = Math.floor((Date.now()-workSessionStart)/1000);
     addElapsedToDailyLog(elapsed);
     updateDailyWorkTimeDisplay();
@@ -193,26 +177,24 @@ function onTimerStopOrPause(){
   }
 }
 
-// 日ごとの合計時間に経過秒数を追加
-function addElapsedToDailyLog(elapsedSec){
+function addElapsedToDailyLog(elapsedSec) {
   dailyWorkLog.totalWorkSeconds += elapsedSec;
   saveWorkLogs();
 }
 
-// モード切替時にタイマー時間を再設定
-function getInitialTimeForMode(){
+// モード切り替え時の初期時間取得
+function getInitialTimeForMode() {
   const mode = document.querySelector('input[name="timerType"]:checked').value;
   currentTimerType = mode;
   let t = userSettings.pomodoro;
-  if(mode==='short') t = userSettings.short;
-  if(mode==='long') t = userSettings.long;
+  if (mode==='short') t = userSettings.short;
+  if (mode==='long') t = userSettings.long;
   return t*60;
 }
 
-// タイマーの開始/一時停止/リセット管理
-function toggleClock(reset){
-  if(reset){
-    // リセット処理
+// タイマー開始/停止/リセット
+function toggleClock(reset) {
+  if (reset) {
     isClockStopped = true;
     isClockRunning = false;
     clearInterval(timerInterval);
@@ -225,7 +207,7 @@ function toggleClock(reset){
     return;
   }
 
-  if(isClockRunning){
+  if (isClockRunning) {
     // 一時停止
     isClockRunning = false;
     clearInterval(timerInterval);
@@ -235,7 +217,7 @@ function toggleClock(reset){
     onTimerStopOrPause();
   } else {
     // 開始
-    if(isClockStopped){
+    if (isClockStopped) {
       currentTimeLeftInSession = getInitialTimeForMode();
       updateTimerDisplay();
       isClockStopped = false;
@@ -244,17 +226,16 @@ function toggleClock(reset){
     onTimerStart();
     playIcon.classList.add('hidden');
     pauseIcon.classList.remove('hidden');
-    timerInterval = setInterval(tick, 1000);
+    timerInterval = setInterval(tick,1000);
   }
 }
 
-// 現在の作業状態をNotionへ記録(POSTする)
-function sendSessionToNotion(durationInMin, mode, task) {
-  const timestamp = new Date().toISOString();
+// Notionへ記録送信関数
+function sendSessionToNotion(timestamp, durationInMin, mode, task) {
   fetch('/api/record-session', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ timestamp, duration: durationInMin, mode, task })
+    body: JSON.stringify({ timestamp, duration: durationInMin, mode, task })
   })
   .then(res=>res.json())
   .then(data=>{
@@ -269,16 +250,24 @@ function sendSessionToNotion(durationInMin, mode, task) {
   });
 }
 
-// 手動で"Now Record"を押したときの処理
-function nowRecord() {
-  // いままでの合計作業秒数(dailyWorkLog)から分を計算
-  const durationInMin = Math.floor(dailyWorkLog.totalWorkSeconds / 60);
-  const mode = (currentTimerType === 'pomodoro') ? "Work" : "Break";
-  const task = "Some Task Name"; // 必要に応じてUIから入力可能に
-  sendSessionToNotion(durationInMin, mode, task);
-}
+// "Now Record"ボタン押下時: テスト用で、現在のセッションがあれば記録
+recordNowBtn.addEventListener('click', ()=>{
+  // 今回は手動記録は現在のモードで行う例
+  // 実作業時間の取得: 作業開始->今まで
+  if (currentTimerType==='pomodoro' && workSessionStart) {
+    const elapsedSec = Math.floor((Date.now()-workSessionStart)/1000);
+    const durationInMin = Math.round(elapsedSec/60);
+    const timestamp = new Date().toISOString();
+    let mode = "Work";
+    const task = "Default Task";
+    sendSessionToNotion(timestamp, durationInMin, mode, task);
+  } else {
+    // 作業中でなければ記録しない
+    console.log("No ongoing work session to record");
+  }
+});
 
-// 統計情報更新
+// 統計関連
 function updateStatsModal(){
   statsDailyTotal.textContent = formatTime(dailyWorkLog.totalWorkSeconds);
   populateStatsList(statsWeeklyList, getPastDaysData(7));
@@ -337,7 +326,7 @@ function populateStatsList(container, data){
 }
 
 // テーマ適用
-function applyTheme(theme){
+function applyTheme(theme) {
   const bgWrapper = document.getElementById('bg-wrapper');
   if(theme==='auto'){
     applyAutoTheme();
@@ -368,7 +357,6 @@ function applyAutoTheme(){
   bgWrapper.style.backgroundColor = color;
 }
 
-// ユーザー設定の保存/読み込み
 function loadUserSettings(){
   const s = localStorage.getItem('userSettings');
   if(s) userSettings = JSON.parse(s);
@@ -377,11 +365,7 @@ function saveUserSettings(){
   localStorage.setItem('userSettings', JSON.stringify(userSettings));
 }
 
-// ==========================
-// イベントリスナー登録
-// ==========================
-
-// タイマーモード切り替え
+// イベントリスナー類
 const timerTypeInputs = document.querySelectorAll('input[name="timerType"]');
 timerTypeInputs.forEach(input=>{
   input.addEventListener('change', ()=>{
@@ -390,13 +374,9 @@ timerTypeInputs.forEach(input=>{
   });
 });
 
-// 開始/一時停止ボタン
 startBtn.addEventListener('click', ()=>toggleClock(false));
-
-// リセットボタン
 stopBtn.addEventListener('click', ()=>toggleClock(true));
 
-// 設定ボタン
 settingsBtn.addEventListener('click', ()=>{
   pomodoroLengthInput.value=userSettings.pomodoro;
   shortBreakLengthInput.value=userSettings.short;
@@ -421,17 +401,12 @@ saveSettingsBtn.addEventListener('click', ()=>{
 
 closeSettingsBtn.addEventListener('click',()=> settingsModal.classList.add('hidden'));
 
-// "Now Record"ボタンで手動記録
-recordNowBtn.addEventListener('click', ()=> nowRecord());
-
-// スタッツボタン
 statsBtn.addEventListener('click', ()=>{
   updateStatsModal();
   statsModal.classList.remove('hidden');
 });
 closeStatsBtn.addEventListener('click',()=> statsModal.classList.add('hidden'));
 
-// Statsタブ切り替え
 const statsTabBtns = document.querySelectorAll('.stats-tab-btn');
 const statsTabPanes = document.querySelectorAll('.stats-tab-pane');
 statsTabBtns.forEach(btn=>{
@@ -443,13 +418,11 @@ statsTabBtns.forEach(btn=>{
   });
 });
 
-// Today's Work表示非表示切り替え
 document.addEventListener('DOMContentLoaded', ()=>{
   loadUserSettings();
   applyTheme(userSettings.theme);
   updateDailyWorkTimeDisplay();
   updateTimerDisplay();
-
   playIcon.classList.remove('hidden');
   pauseIcon.classList.add('hidden');
 
@@ -459,7 +432,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   toggleDailyWorkBtn.addEventListener('click', ()=>{
     dailyWorkVisible = !dailyWorkVisible;
     dailyWorkTime.style.display = dailyWorkVisible ? 'inline-block' : 'none';
-    // アイコンを切り替え(例: 目のアイコン)
     toggleDailyWorkBtn.innerHTML = dailyWorkVisible ?
     `
     <svg width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
