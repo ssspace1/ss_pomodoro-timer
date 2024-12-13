@@ -84,16 +84,18 @@ html,body {
   text-align:center;
   gap:1.5rem;
   padding:1rem;
-  max-width:300px;
+  max-width:500px; /* 幅を増やして横並び可能に */
   margin:0 auto;
 }
 
+/* 通常時は横並び、折り返さない */
 .mode-selection {
   display:flex; 
+  flex-direction: row; 
   gap:1rem; 
   align-items:center; 
   justify-content:center;
-  flex-wrap:wrap;
+  flex-wrap:nowrap; /* 折り返ししない */
 }
 
 .form-check-input { display:none; }
@@ -267,13 +269,14 @@ html,body {
     flex-direction: column;
     gap:1.5rem; /* 間隔を大きく */
     align-items: stretch;
+    flex-wrap:nowrap; /* 折り返しは関係なく縦配置 */
   }
 
   .form-check-label.btn {
     width:100%;
     text-align:center;
     font-size:0.8rem; /* 縮小時にさらに文字を小さく */
-    padding:0.3rem 0.8rem; /* パディングもやや減らす */
+    padding:0.3rem 0.8rem; 
   }
 
   /* 縮小時も数字をさらに大きく */
