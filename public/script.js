@@ -61,6 +61,16 @@ const statsDailyTotal = document.getElementById('statsDailyTotal');
 const statsWeeklyList = document.getElementById('statsWeeklyList');
 const statsMonthlyList = document.getElementById('statsMonthlyList');
 
+//
+const endTime = new Date(timestamp); // 終了時刻(Dateオブジェクト)
+const startTime = new Date(endTime.getTime() - duration*60000); 
+// duration分前に戻す (60000ms=1分)
+
+const startIso = startTime.toISOString(); 
+const endIso = endTime.toISOString();
+
+
+
 // サウンド
 const alertSound = new Audio("https://example.com/chime.mp3");
 alertSound.volume = 1.0;
