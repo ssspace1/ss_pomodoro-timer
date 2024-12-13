@@ -4,8 +4,13 @@ html,body {
   font-family:'Space Grotesk',sans-serif; 
   color:#fff; 
   background:none;
-  display:flex; flex-direction:column;
-  font-size:clamp(14px, 1vw + 0.5rem, 18px);
+  display:flex; 
+  flex-direction:column;
+  font-size:16px;
+  box-sizing:border-box;
+}
+*, *::before, *::after {
+  box-sizing:border-box;
 }
 
 #bg-wrapper {
@@ -14,20 +19,17 @@ html,body {
   z-index:-1;
 }
 
-/* トップバー: Today's Work と 目アイコン を左寄せで一緒に配置 */
 #top-bar {
   flex:0 0 auto;
   display:flex; 
   align-items:center; 
-  justify-content:flex-start; /* 左寄せ */
-  padding:0.5rem 1rem;
-  min-width:0;
-  gap:1rem; /* 左端と余裕を持たせたい場合 */
+  justify-content:flex-start;
+  padding:0.5rem 0.5rem;
 }
 
 #daily-work-container {
-  display:flex; align-items:center; gap:0.5rem;
-  min-width:0;
+  display:flex; align-items:center; 
+  gap:0.5rem;
   white-space: nowrap; 
   overflow: hidden; 
   text-overflow: ellipsis;
@@ -35,29 +37,32 @@ html,body {
 
 #daily-work-time {
   background:rgba(0,0,0,0.5); 
-  padding:0.3rem 0.8rem; 
+  padding:0.2rem 0.6rem; 
   border-radius:5px;
   font-weight:600;
   white-space: nowrap;
   overflow: hidden; 
   text-overflow: ellipsis;
-  font-size:clamp(0.8rem, 1vw, 1rem);
-  max-width:150px;
+  font-size:0.9rem;
+  max-width:130px;
 }
 
 .icon-button, .start-button {
-  display:inline-flex; align-items:center; justify-content:center; 
-  cursor:pointer; transition:background 0.3s;
+  display:inline-flex; 
+  align-items:center; 
+  justify-content:center; 
+  cursor:pointer; 
+  transition:background 0.3s;
   border:none;
-  font-size:clamp(0.8rem, 1vw, 1rem);
+  font-size:1rem;
   min-width:0;
 }
 
 .icon-button {
   background:rgba(255,255,255,0.1);
   border-radius:50%; 
-  width:clamp(30px, 2vw + 20px, 40px); 
-  height:clamp(30px, 2vw + 20px, 40px); 
+  width:36px; 
+  height:36px; 
   color:#fff;
   flex-shrink:0;
 }
@@ -65,8 +70,8 @@ html,body {
   background:rgba(255,255,255,0.3);
 }
 .icon-button svg {
-  width:clamp(15px, 1.5vw, 20px);
-  height:clamp(15px, 1.5vw, 20px);
+  width:20px;
+  height:20px;
   stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
 }
 
@@ -79,24 +84,22 @@ html,body {
   text-align:center;
   gap:1.5rem;
   padding:1rem;
-  max-width:500px;
+  max-width:300px;
   margin:0 auto;
-  width:100%;
-  min-width:0;
 }
 
+/* 基本は横並び */
 .mode-selection {
   display:flex; 
-  gap:1.5rem; 
+  gap:1rem; 
   align-items:center; 
   justify-content:center;
   flex-wrap:wrap;
-  min-width:0;
 }
 
 .form-check-input { display:none; }
 .form-check-label.btn {
-  padding:0.5rem 1.2rem; 
+  padding:0.4rem 1rem; 
   border:1px solid #fff; 
   border-radius:42px; 
   background:transparent; 
@@ -104,7 +107,7 @@ html,body {
   cursor:pointer; 
   font-weight:500; 
   transition:0.3s;
-  font-size:clamp(0.9rem, 1vw, 1rem);
+  font-size:1rem;
   white-space: nowrap;
 }
 .form-check-input:checked + .form-check-label.btn, 
@@ -113,47 +116,45 @@ html,body {
   color:#000;
 }
 
+/* 初期は大きめ */
 .timer-display {
-  font-size: clamp(4rem, 10vw, 7rem);
-  letter-spacing:-0.05rem;
+  font-size:4rem; 
   line-height:1;
   white-space: nowrap;
   overflow:hidden; 
   text-overflow:ellipsis;
-  min-width:0;
+  font-weight:700;
 }
 #pomodoro-timer {
   font-size:inherit;
   white-space: nowrap;
-  font-weight:700;
 }
 
 .action-buttons {
   display:flex; 
   flex-direction:row; 
-  gap:clamp(0.8rem, 2vw, 1.5rem);
+  gap:1rem;
   align-items:center; 
   justify-content:center;
   flex-wrap:wrap; 
-  min-width:0;
 }
 
 .start-button {
   background:#fff; 
   color:#000; 
   border-radius:42px; 
-  padding:0.6rem 1.5rem;
+  padding:0.4rem 1.2rem;
   font-weight:600;
   gap:0.5rem;
-  font-size:clamp(0.9rem,1vw,1rem);
+  font-size:1rem;
   white-space: nowrap;
 }
 .start-button:hover {
   background:#ccc;
 }
 .start-button svg {
-  width:clamp(15px, 1.5vw, 20px);
-  height:clamp(15px, 1.5vw, 20px);
+  width:20px;
+  height:20px;
 }
 #start-text {
   line-height:1;
@@ -164,8 +165,14 @@ html,body {
 }
 
 .modal {
-  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); 
-  display:flex; align-items:center; justify-content:center; z-index:999;
+  position:fixed; 
+  top:0; left:0; 
+  width:100%; height:100%; 
+  background:rgba(0,0,0,0.5); 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  z-index:999;
 }
 .modal.hidden {
   display:none;
@@ -178,7 +185,7 @@ html,body {
   max-width:300px; 
   width:90%;
   font-family:'Inter',sans-serif;
-  font-size:clamp(0.9rem, 1vw, 1rem);
+  font-size:0.9rem;
   overflow:hidden;
 }
 .modal-actions {
@@ -188,10 +195,10 @@ html,body {
 }
 
 .stats-modal-content {
-  width:clamp(250px, 90%, 400px); 
+  width:300px; 
   max-height:80vh; 
   overflow-y:auto;
-  font-size:clamp(0.8rem,1vw,1rem);
+  font-size:0.9rem;
 }
 .stats-tabs {
   display:flex; 
@@ -209,7 +216,7 @@ html,body {
   cursor:pointer; 
   border-radius:5px; 
   transition:background 0.3s;
-  font-size:clamp(0.8rem,1vw,1rem);
+  font-size:0.9rem;
   white-space: nowrap;
 }
 .stats-tab-btn.active {
@@ -250,23 +257,27 @@ html,body {
   height:100%;
 }
 
+/* 小画面時の対応 */
 @media (max-width:500px) {
+  /* Today's Workと目アイコンを中央に */
+  #top-bar {
+    justify-content:center; 
+  }
+
+  /* モードボタンを縦並びにし、感覚をもっと広げる */
   .mode-selection {
     flex-direction: column;
-    gap:1rem;
+    gap:1.5rem; /* 通常より広い隙間を確保 */
     align-items: stretch;
   }
 
   .form-check-label.btn {
-    display:block;
     width:100%;
     text-align:center;
   }
-}
 
-@media (max-width:300px) {
-  .form-check-label.btn {
-    padding:0.4rem 1rem;
-    font-size:0.9rem;
+  /* 縮小時も数字をもっと大きく */
+  .timer-display {
+    font-size:5rem; /* 通常4remよりさらに大きく */
   }
 }
