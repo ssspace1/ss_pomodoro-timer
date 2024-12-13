@@ -193,7 +193,9 @@ function toggleClock(reset){
 }
 
 
-// タイマー完了時処理
+// すでにあるコード+下記変更点のみ抜粋
+
+// タイマー完了時にNotionへ記録する例
 document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>{
   if(userSettings.playSound){
     alertSound.currentTime=0;
@@ -202,7 +204,38 @@ document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>
   if(Notification.permission==='granted'){
     new Notification("Pomodoro Finished!",{body:"Time for a break!"});
   }
+
+  // Notion連携: pomodoro終了時、workSessionStartからの経過時間を記録
+  // currentTimerTypeがpomodoroの場合のみ記録
+  if(currentTimerType === 'pomodoro' && workSessionStart) {
+    const elapsed = Math.floor((Date.now()-workSessionStart)/1000);
+    const durationInMin = Math.round(elapsed/60);
+    sendSessionToNotion(durationInMin, 'Work', ''); 
+    // 'Work'は固定モード名、task名があるなら''にタスク名を入れる
+  }
 });
+
+// Notion送信用関数
+function sendSessionToNotion(duration, mode, task) {
+  fetch('/api/record-session', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      timestamp: new Date().toISOString(),
+      duration: duration,
+      mode: mode,
+      task: task || ''
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    console.log('Notion record success:',data);
+  })
+  .catch(err=>{
+    console.error('Notion record error:',err);
+  });
+}
+
 
 // Radio change
 const timerTypeInputs = document.querySelectorAll('input[name="timerType"]');
