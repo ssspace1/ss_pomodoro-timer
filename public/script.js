@@ -1,9 +1,5 @@
 // script.js
 
-// 前回までのコードに加え、集計データの蓄積を強化し、
-// 過去の記録をローカルストレージに保存する。
-// workLogs: [{date:"YYYY-MM-DD", totalWorkSeconds: number}, ...]
-
 let userSettings = {
   pomodoro:25,
   short:5,
@@ -54,16 +50,11 @@ if(Notification && Notification.permission==='default'){
 const alertSound = new Audio("https://example.com/chime.mp3");
 alertSound.volume = 1.0;
 
-//////////////////////
-// 日付関数
 function getTodayDateStr(){
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-// 日別データ {date, totalWorkSeconds}
-// dailyWorkLogは当日分
-// workLogsは過去分含む
 let dailyWorkLog = { date:getTodayDateStr(), totalWorkSeconds:0 };
 let workLogs = [];
 
@@ -74,7 +65,6 @@ function loadWorkLogs(){
   } else {
     workLogs = [];
   }
-  // 当日分がなければ追加
   const today = getTodayDateStr();
   let todayLog = workLogs.find(l=>l.date===today);
   if(!todayLog) {
@@ -101,7 +91,6 @@ function formatTime(seconds){
   return [h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
 }
 
-// タイマー開始/停止時処理
 let workSessionStart = null;
 
 function onTimerStart(){
@@ -122,7 +111,6 @@ function onTimerStopOrPause(){
   }
 }
 
-// getInitialTimeForMode
 function getInitialTimeForMode(){
   const mode = document.querySelector('input[name="timerType"]:checked').value;
   currentTimerType=mode;
@@ -145,7 +133,6 @@ function tick(){
     clearInterval(timerInterval);
     timerInterval=null;
     onTimerStopOrPause();
-    // Timer Done Event
     const evt=new Event("timerDone");
     document.getElementById('pomodoro-container').dispatchEvent(evt);
     toggleClock(true);
@@ -154,14 +141,13 @@ function tick(){
 
 function toggleClock(reset){
   if(reset){
-    // リセット時は必ずplay表示, pause非表示
     isClockStopped=true;
     isClockRunning=false;
     clearInterval(timerInterval);
     timerInterval=null;
     currentTimeLeftInSession=getInitialTimeForMode();
     updateTimerDisplay();
-
+    // リセット時は常にplay表示、pause非表示
     playIcon.classList.remove('hidden');
     pauseIcon.classList.add('hidden');
     onTimerStopOrPause();
@@ -169,16 +155,15 @@ function toggleClock(reset){
   }
 
   if(isClockRunning){
-    // 一時停止時はplay表示, pause非表示
+    // 一時停止: play表示, pause非表示
     isClockRunning=false;
     clearInterval(timerInterval);
     timerInterval=null;
-
     playIcon.classList.remove('hidden');
     pauseIcon.classList.add('hidden');
     onTimerStopOrPause();
   } else {
-    // 開始時はpause表示, play非表示
+    // 開始: pause表示, play非表示
     if(isClockStopped){
       currentTimeLeftInSession=getInitialTimeForMode();
       updateTimerDisplay();
@@ -192,10 +177,7 @@ function toggleClock(reset){
   }
 }
 
-
-// すでにあるコード+下記変更点のみ抜粋
-
-// タイマー完了時にNotionへ記録する例
+// タイマー完了時
 document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>{
   if(userSettings.playSound){
     alertSound.currentTime=0;
@@ -205,17 +187,14 @@ document.getElementById('pomodoro-container').addEventListener('timerDone', ()=>
     new Notification("Pomodoro Finished!",{body:"Time for a break!"});
   }
 
-  // Notion連携: pomodoro終了時、workSessionStartからの経過時間を記録
-  // currentTimerTypeがpomodoroの場合のみ記録
-  if(currentTimerType === 'pomodoro' && workSessionStart) {
+  // Notion連携: pomodoro終了時記録
+  if(currentTimerType==='pomodoro' && workSessionStart) {
     const elapsed = Math.floor((Date.now()-workSessionStart)/1000);
     const durationInMin = Math.round(elapsed/60);
-    sendSessionToNotion(durationInMin, 'Work', ''); 
-    // 'Work'は固定モード名、task名があるなら''にタスク名を入れる
+    sendSessionToNotion(durationInMin, 'Work', '');
   }
 });
 
-// Notion送信用関数
 function sendSessionToNotion(duration, mode, task) {
   fetch('/api/record-session', {
     method:'POST',
@@ -236,8 +215,7 @@ function sendSessionToNotion(duration, mode, task) {
   });
 }
 
-
-// Radio change
+// Radioボタン変更でモード切替
 const timerTypeInputs = document.querySelectorAll('input[name="timerType"]');
 timerTypeInputs.forEach(input=>{
   input.addEventListener('change', ()=>{
@@ -259,7 +237,6 @@ function saveUserSettings(){
   localStorage.setItem('userSettings', JSON.stringify(userSettings));
 }
 
-// 新たなautoテーマ対応の関数
 function applyTheme(theme){
   const bgWrapper = document.getElementById('bg-wrapper');
   if(theme==='auto'){
@@ -275,12 +252,10 @@ function applyTheme(theme){
   }
 }
 
-// autoモードで時間帯に応じて背景色を変更
 function applyAutoTheme(){
   const bgWrapper = document.getElementById('bg-wrapper');
   const hour = new Date().getHours();
   let color;
-  // 3時間毎に区切る
   if(hour>=0 && hour<3) color='#2f2f2f';
   else if(hour>=3 && hour<6) color='#33404f';
   else if(hour>=6 && hour<9) color='#8799a1';
@@ -293,7 +268,7 @@ function applyAutoTheme(){
   bgWrapper.style.backgroundColor = color;
 }
 
-// Settings Modal
+// 設定ボタン
 settingsBtn.addEventListener('click', ()=>{
   pomodoroLengthInput.value=userSettings.pomodoro;
   shortBreakLengthInput.value=userSettings.short;
@@ -311,20 +286,18 @@ saveSettingsBtn.addEventListener('click', ()=>{
   saveUserSettings();
   applyTheme(userSettings.theme);
   settingsModal.classList.add('hidden');
-  // toggleClock(true); は呼ばない
+  // toggleClock(true)は呼ばない
 });
+closeSettingsBtn.addEventListener('click',()=> settingsModal.classList.add('hidden'));
 
-
-// Stats Modal
+// Statsボタン
 statsBtn.addEventListener('click', ()=>{
   updateStatsModal();
   statsModal.classList.remove('hidden');
 });
-closeStatsBtn.addEventListener('click',()=>{
-  statsModal.classList.add('hidden');
-});
+closeStatsBtn.addEventListener('click',()=> statsModal.classList.add('hidden'));
 
-// Statsタブ切り替え
+// Statsタブ切替
 const statsTabBtns = document.querySelectorAll('.stats-tab-btn');
 const statsTabPanes = document.querySelectorAll('.stats-tab-pane');
 statsTabBtns.forEach(btn=>{
@@ -336,12 +309,8 @@ statsTabBtns.forEach(btn=>{
   });
 });
 
-// Stats表示用関数
 function updateStatsModal(){
-  // dailyは既に当日分がdailyWorkLogにある
   statsDailyTotal.textContent = formatTime(dailyWorkLog.totalWorkSeconds);
-  
-  // 過去7日分
   populateStatsList(statsWeeklyList, getPastDaysData(7));
   populateStatsList(statsMonthlyList, getPastDaysData(30));
 }
@@ -357,18 +326,15 @@ function getPastDaysData(days){
     if(!log) log={date:dateStr, totalWorkSeconds:0};
     result.push(log);
   }
-  result.sort((a,b)=> a.date>b.date?1:-1); // 日付順
+  result.sort((a,b)=> a.date>b.date?1:-1);
   return result;
 }
 
 function populateStatsList(container, data){
   container.innerHTML='';
-  // max find
   let maxSec = 0;
-  data.forEach(d=>{
-    if(d.totalWorkSeconds>maxSec) maxSec=d.totalWorkSeconds;
-  });
-  if(maxSec===0) maxSec=1; // avoid div0
+  data.forEach(d=>{ if(d.totalWorkSeconds>maxSec) maxSec=d.totalWorkSeconds; });
+  if(maxSec===0) maxSec=1;
 
   data.forEach(d=>{
     const row = document.createElement('div');
@@ -400,12 +366,17 @@ function populateStatsList(container, data){
   });
 }
 
+// TodaysWork非表示ボタン
 document.addEventListener('DOMContentLoaded', ()=>{
   loadWorkLogs();
   loadUserSettings();
   applyTheme(userSettings.theme);
   updateDailyWorkTimeDisplay();
   updateTimerDisplay();
+
+  // 初期アイコン状態
+  playIcon.classList.remove('hidden');
+  pauseIcon.classList.add('hidden');
 
   const toggleDailyWorkBtn = document.getElementById('toggleDailyWork');
   const dailyWorkTime = document.getElementById('daily-work-time');
