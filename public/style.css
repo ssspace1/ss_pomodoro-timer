@@ -19,32 +19,29 @@ html,body {
   z-index:-1;
 }
 
+/* デフォルトは右寄せ: 大きい表示時 */
 #top-bar {
   flex:0 0 auto;
   display:flex; 
   align-items:center; 
-  justify-content:flex-start;
-  padding:0.5rem 0.5rem;
+  justify-content:flex-end;
+  padding:0.3rem 0.5rem; /* 上下間隔を少し狭める */
 }
 
 #daily-work-container {
   display:flex; align-items:center; 
   gap:0.5rem;
   white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis;
+  /* max-widthやoverflowを無くし、数字が常に見えるように */
 }
 
 #daily-work-time {
   background:rgba(0,0,0,0.5); 
-  padding:0.2rem 0.6rem; 
+  padding:0.1rem 0.5rem; /* 上下もさらに狭める */
   border-radius:5px;
   font-weight:600;
   white-space: nowrap;
-  overflow: hidden; 
-  text-overflow: ellipsis;
   font-size:0.9rem;
-  max-width:130px;
 }
 
 .icon-button, .start-button {
@@ -84,7 +81,7 @@ html,body {
   text-align:center;
   gap:1.5rem;
   padding:1rem;
-  max-width:500px; /* 幅を増やして横並び可能に */
+  max-width:500px; 
   margin:0 auto;
 }
 
@@ -95,7 +92,7 @@ html,body {
   gap:1rem; 
   align-items:center; 
   justify-content:center;
-  flex-wrap:nowrap; /* 折り返ししない */
+  flex-wrap:nowrap;
 }
 
 .form-check-input { display:none; }
@@ -117,13 +114,14 @@ html,body {
   color:#000;
 }
 
+/* メインのpomodoro-timerの数字をより目立たせる */
 .timer-display {
-  font-size:4rem; 
+  font-size:6.5rem; 
   line-height:1;
   white-space: nowrap;
   overflow:hidden; 
   text-overflow:ellipsis;
-  font-weight:700;
+  font-weight:900; /* 太くしてさらに目立たせる */
 }
 #pomodoro-timer {
   font-size:inherit;
@@ -267,20 +265,20 @@ html,body {
   /* モードボタンを縦並びにし、感覚を広く保ち、文字小さく */
   .mode-selection {
     flex-direction: column;
-    gap:1.5rem; /* 間隔を大きく */
+    gap:1.5rem; 
     align-items: stretch;
-    flex-wrap:nowrap; /* 折り返しは関係なく縦配置 */
+    flex-wrap:nowrap;
   }
 
   .form-check-label.btn {
     width:100%;
     text-align:center;
-    font-size:0.8rem; /* 縮小時にさらに文字を小さく */
+    font-size:0.8rem; 
     padding:0.3rem 0.8rem; 
   }
 
-  /* 縮小時も数字をさらに大きく */
+  /* 縮小時は数字をさらに大きく */
   .timer-display {
-    font-size:5rem;
+    font-size:6.5rem;
   }
 }
