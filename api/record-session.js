@@ -34,6 +34,9 @@ export default async function handler(req, res) {
     res.status(200).json({ message: "Success" });
   } catch (error) {
     console.error('Notion API error:', error);
+    console.log("Received data:", req.body);
+// ... Notion API call ...
+
     res.status(500).json({error: "Failed to write to Notion"});
   }
 }
