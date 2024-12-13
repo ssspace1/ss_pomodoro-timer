@@ -279,6 +279,6 @@ html,body {
 
   /* 縮小時は数字をさらに大きく */
   .timer-display {
-    font-size:6.5rem;
+    font-size:5.5rem;
   }
 }
