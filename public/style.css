@@ -88,7 +88,6 @@ html,body {
   margin:0 auto;
 }
 
-/* 基本は横並び */
 .mode-selection {
   display:flex; 
   gap:1rem; 
@@ -116,7 +115,6 @@ html,body {
   color:#000;
 }
 
-/* 初期は大きめ */
 .timer-display {
   font-size:4rem; 
   line-height:1;
@@ -264,20 +262,22 @@ html,body {
     justify-content:center; 
   }
 
-  /* モードボタンを縦並びにし、感覚をもっと広げる */
+  /* モードボタンを縦並びにし、感覚を広く保ち、文字小さく */
   .mode-selection {
     flex-direction: column;
-    gap:1.5rem; /* 通常より広い隙間を確保 */
+    gap:1.5rem; /* 間隔を大きく */
     align-items: stretch;
   }
 
   .form-check-label.btn {
     width:100%;
     text-align:center;
+    font-size:0.8rem; /* 縮小時にさらに文字を小さく */
+    padding:0.3rem 0.8rem; /* パディングもやや減らす */
   }
 
-  /* 縮小時も数字をもっと大きく */
+  /* 縮小時も数字をさらに大きく */
   .timer-display {
-    font-size:5rem; /* 通常4remよりさらに大きく */
+    font-size:5rem;
   }
 }
