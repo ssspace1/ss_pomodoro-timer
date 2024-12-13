@@ -5,6 +5,7 @@ html,body {
   color:#fff; 
   background:none;
   display:flex; flex-direction:column;
+  font-size:clamp(14px, 1vw + 0.5rem, 18px);
 }
 
 #bg-wrapper {
@@ -13,38 +14,59 @@ html,body {
   z-index:-1;
 }
 
+/* トップバー: Today's Work と 目アイコン を左寄せで一緒に配置 */
 #top-bar {
   flex:0 0 auto;
-  display:flex; align-items:center; justify-content:flex-end;
-  padding:1rem;
-  gap:0.5rem;
+  display:flex; 
+  align-items:center; 
+  justify-content:flex-start; /* 左寄せ */
+  padding:0.5rem 1rem;
+  min-width:0;
+  gap:1rem; /* 左端と余裕を持たせたい場合 */
 }
 
 #daily-work-container {
   display:flex; align-items:center; gap:0.5rem;
+  min-width:0;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
 }
 
 #daily-work-time {
-  background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:5px;
-  font-size:0.9rem; font-weight:600;
+  background:rgba(0,0,0,0.5); 
+  padding:0.3rem 0.8rem; 
+  border-radius:5px;
+  font-weight:600;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  font-size:clamp(0.8rem, 1vw, 1rem);
+  max-width:150px;
 }
 
 .icon-button, .start-button {
   display:inline-flex; align-items:center; justify-content:center; 
   cursor:pointer; transition:background 0.3s;
   border:none;
+  font-size:clamp(0.8rem, 1vw, 1rem);
+  min-width:0;
 }
+
 .icon-button {
   background:rgba(255,255,255,0.1);
   border-radius:50%; 
-  width:40px; height:40px; 
+  width:clamp(30px, 2vw + 20px, 40px); 
+  height:clamp(30px, 2vw + 20px, 40px); 
   color:#fff;
+  flex-shrink:0;
 }
 .icon-button:hover {
   background:rgba(255,255,255,0.3);
 }
 .icon-button svg {
-  display:block; width:20px; height:20px;
+  width:clamp(15px, 1.5vw, 20px);
+  height:clamp(15px, 1.5vw, 20px);
   stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
 }
 
@@ -55,111 +77,196 @@ html,body {
   align-items:center; 
   justify-content:center;
   text-align:center;
-  gap:2rem;
+  gap:1.5rem;
   padding:1rem;
+  max-width:500px;
+  margin:0 auto;
+  width:100%;
+  min-width:0;
 }
 
 .mode-selection {
-  display:inline-flex; gap:1rem; align-items:center; justify-content:center;
+  display:flex; 
+  gap:1.5rem; 
+  align-items:center; 
+  justify-content:center;
+  flex-wrap:wrap;
+  min-width:0;
 }
 
-.form-check {
-  display:inline-flex;
-}
 .form-check-input { display:none; }
 .form-check-label.btn {
-  padding:0.5rem 1rem; border:1px solid #fff; border-radius:42px; 
-  background:transparent; color:#fff; cursor:pointer; font-size:1rem; font-weight:500; transition:0.3s;
+  padding:0.5rem 1.2rem; 
+  border:1px solid #fff; 
+  border-radius:42px; 
+  background:transparent; 
+  color:#fff; 
+  cursor:pointer; 
+  font-weight:500; 
+  transition:0.3s;
+  font-size:clamp(0.9rem, 1vw, 1rem);
+  white-space: nowrap;
 }
-.form-check-input:checked + .form-check-label.btn, .form-check-label.btn:hover {
-  background:#fff; color:#000;
+.form-check-input:checked + .form-check-label.btn, 
+.form-check-label.btn:hover {
+  background:#fff; 
+  color:#000;
 }
 
 .timer-display {
-  font-size:5rem; letter-spacing:-0.1rem;
+  font-size: clamp(4rem, 10vw, 7rem);
+  letter-spacing:-0.05rem;
+  line-height:1;
+  white-space: nowrap;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  min-width:0;
 }
 #pomodoro-timer {
-  font-size:5rem;
+  font-size:inherit;
+  white-space: nowrap;
+  font-weight:700;
 }
 
 .action-buttons {
-  display:flex; flex-direction:row; gap:1rem; align-items:center; justify-content:center;
-  flex-wrap:nowrap; /* keep horizontally aligned even if narrow */
+  display:flex; 
+  flex-direction:row; 
+  gap:clamp(0.8rem, 2vw, 1.5rem);
+  align-items:center; 
+  justify-content:center;
+  flex-wrap:wrap; 
+  min-width:0;
 }
 
 .start-button {
-  background:#fff; color:#000; border-radius:42px; padding:0.5rem 1.5rem;
-  font-size:1rem; font-weight:600;
-  gap:0.5rem;  
+  background:#fff; 
+  color:#000; 
+  border-radius:42px; 
+  padding:0.6rem 1.5rem;
+  font-weight:600;
+  gap:0.5rem;
+  font-size:clamp(0.9rem,1vw,1rem);
+  white-space: nowrap;
 }
 .start-button:hover {
   background:#ccc;
 }
 .start-button svg {
-  display:block; width:20px; height:20px;
-  stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  width:clamp(15px, 1.5vw, 20px);
+  height:clamp(15px, 1.5vw, 20px);
 }
 #start-text {
-  line-height:1; 
+  line-height:1;
 }
 
 .hidden {
   display:none !important;
 }
 
-
 .modal {
-  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:999;
+  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); 
+  display:flex; align-items:center; justify-content:center; z-index:999;
 }
 .modal.hidden {
   display:none;
 }
 .modal-content {
-  background:#333; color:#fff; padding:20px; border-radius:10px;
-  max-width:300px; width:90%;
+  background:#333; 
+  color:#fff; 
+  padding:20px; 
+  border-radius:10px;
+  max-width:300px; 
+  width:90%;
   font-family:'Inter',sans-serif;
+  font-size:clamp(0.9rem, 1vw, 1rem);
+  overflow:hidden;
 }
 .modal-actions {
-  margin-top:20px; display:flex; justify-content:space-between;
+  margin-top:20px; 
+  display:flex; 
+  justify-content:space-between;
 }
 
 .stats-modal-content {
-  width:400px; max-height:80vh; overflow-y:auto;
+  width:clamp(250px, 90%, 400px); 
+  max-height:80vh; 
+  overflow-y:auto;
+  font-size:clamp(0.8rem,1vw,1rem);
 }
 .stats-tabs {
-  display:flex; gap:10px; margin:10px 0;
+  display:flex; 
+  gap:10px; 
+  margin:10px 0;
+  white-space: nowrap;
 }
 .stats-tab-btn {
-  flex:1; text-align:center; padding:0.5rem; background:#444; color:#fff; border:none; cursor:pointer; border-radius:5px; transition:background 0.3s;
+  flex:1; 
+  text-align:center; 
+  padding:0.5rem; 
+  background:#444; 
+  color:#fff; 
+  border:none; 
+  cursor:pointer; 
+  border-radius:5px; 
+  transition:background 0.3s;
+  font-size:clamp(0.8rem,1vw,1rem);
+  white-space: nowrap;
 }
 .stats-tab-btn.active {
-  background:#fff; color:#000;
+  background:#fff; 
+  color:#000;
 }
 .stats-tab-pane { display:none; }
 .stats-tab-pane.active { display:block; }
 .stats-list { margin-top:15px; }
 .day-row {
-  display:flex; align-items:center; margin-bottom:10px;
+  display:flex; 
+  align-items:center; 
+  margin-bottom:10px;
+  white-space: nowrap;
 }
-.day-date { width:100px; color:#ccc; }
-.day-time { width:70px; text-align:right; margin-right:10px; }
+.day-date { 
+  width:100px; 
+  color:#ccc; 
+  overflow:hidden; 
+  text-overflow:ellipsis; 
+}
+.day-time { 
+  width:70px; 
+  text-align:right; 
+  margin-right:10px; 
+  overflow:hidden; 
+  text-overflow:ellipsis; 
+}
 .bar-container {
-  flex:1; background:#222; height:10px; border-radius:5px; overflow:hidden;
+  flex:1; 
+  background:#222; 
+  height:10px; 
+  border-radius:5px; 
+  overflow:hidden;
 }
 .bar {
-  background:#0f0; height:100%;
+  background:#0f0; 
+  height:100%;
 }
 
-/* レスポンシブ: 横並びをキープするため特になし */
-@media(max-width:500px) {
+@media (max-width:500px) {
   .mode-selection {
-    flex-direction:column;
-    gap:0.5rem;
+    flex-direction: column;
+    gap:1rem;
+    align-items: stretch;
   }
-  .start-button {
-    font-size:0.9rem;
+
+  .form-check-label.btn {
+    display:block;
+    width:100%;
+    text-align:center;
   }
-  #start-text {
+}
+
+@media (max-width:300px) {
+  .form-check-label.btn {
+    padding:0.4rem 1rem;
     font-size:0.9rem;
   }
 }
