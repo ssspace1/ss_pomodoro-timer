@@ -116,11 +116,15 @@
         <option value="auto">Auto</option>
       </select>
     </label><br/>
-    <label>Auto record daily to Notion: <input type="checkbox" id="autoRecordDailyCheck"></label><br/><br/>
+    <label>Auto record daily to Notion: <input type="checkbox" id="autoRecordDailyCheck"></label><br/>
+    
+    <!-- ★変更点: Day Reset Time追加 -->
+    <label>Day Reset Time: <input type="time" id="dayResetTimeInput" value="00:00"></label><br/><br/>
 
     <button id="recordNowBtn" class="btn">Now Record</button>
+    <!-- ★変更点: Now Recordボタン下に注意書き追加 -->
+    <small>※このボタンはポモドーロ実行中に押して下さい</small> 
     <small>※Only record during active Pomodoro sessions</small>
-    <small>※作業中（pomodoro稼働中）のみ記録可能</small>
 
     <div class="modal-actions">
       <button id="saveSettingsBtn" class="btn">Save</button>
@@ -128,6 +132,7 @@
     </div>
   </div>
 </div>
+
 
 
   <div id="statsModal" class="modal hidden">
