@@ -10,7 +10,8 @@ let userSettings = {
   long: 10,
   playSound: true,
   theme: "default",
-  autoRecordDaily: false
+  autoRecordDaily: false,
+  dayResetTime: "00:00" // 新規追加
 };
 
 let isClockRunning = false;
@@ -71,6 +72,28 @@ function getTodayDateStr() {
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+
+
+function getTodayDateStr(){
+  // 現在時刻
+  const now = new Date();
+  // ★dayResetTimeを分解
+  const [resetH, resetM] = userSettings.dayResetTime.split(':').map(n=>parseInt(n,10));
+  
+  // 今日のreset時刻を表すDate
+  const resetToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), resetH, resetM);
+  
+  // 現在がreset時刻より前か後かで日付を決める
+  // もしnow < resetTodayなら、実質まだ前日の作業日とみなす
+  let effectiveDate = new Date(now);
+  if (now < resetToday) {
+    // 昨日の日付として扱う
+    effectiveDate.setDate(effectiveDate.getDate()-1);
+  }
+
+  return effectiveDate.getFullYear()+'-'+String(effectiveDate.getMonth()+1).padStart(2,'0')+'-'+String(effectiveDate.getDate()).padStart(2,'0');
+}
+
 
 function loadWorkLogs() {
   const w = localStorage.getItem('workLogs');
@@ -151,13 +174,21 @@ function onTimerEnd() {
     if (currentTimerType === 'long') mode = "Long Break";
 
     // taskは固定にする(必要ならUI追加可能)
-    const task = "Default Task";
+// onTimerEnd()やnowRecordでtask変数に"Pomo Session"をセット
+  const task = "Pomo Session";
+  sendSessionToNotion(timestamp, durationInMin, mode, task);
 
-    sendSessionToNotion(timestamp, durationInMin, mode, task);
   }
 
-  toggleClock(true);
+  if (currentTimerType === 'short' || currentTimerType === 'long') {
+    // 次はpomodoroモードに戻す(自動開始するかリセットして待機するかは要望に応じ調整可能)
+    document.querySelector('input[name="timerType"][value="pomodoro"]').checked = true;
+    toggleClock(true); // リセット状態に戻す。自動で開始したい場合は別処理
+  } else {
+    toggleClock(true);
+  }
 }
+
 
 function onTimerStart() {
   if (currentTimerType === 'pomodoro') {
@@ -250,22 +281,25 @@ function sendSessionToNotion(timestamp, durationInMin, mode, task) {
   });
 }
 
-// "Now Record"ボタン押下時: テスト用で、現在のセッションがあれば記録
+// Now Record ボタンでの記録処理
 recordNowBtn.addEventListener('click', ()=>{
-  // 今回は手動記録は現在のモードで行う例
-  // 実作業時間の取得: 作業開始->今まで
+  // ここは注意書きをindex.htmlで追加済みなので、
+  // 「動いてるときに押してね」というガイドがユーザーには伝わる。
+  // コード上はそのままでもよいが、必要なら変更可。
   if (currentTimerType==='pomodoro' && workSessionStart) {
     const elapsedSec = Math.floor((Date.now()-workSessionStart)/1000);
     const durationInMin = Math.round(elapsedSec/60);
     const timestamp = new Date().toISOString();
-    let mode = "Work";
-    const task = "Default Task";
+    const mode = "Work";
+    // ★task名固定
+    const task = "Pomo Session";
     sendSessionToNotion(timestamp, durationInMin, mode, task);
   } else {
-    // 作業中でなければ記録しない
-    console.log("No ongoing work session to record");
+    console.log("No ongoing work session to record"); // このままでもOK
   }
 });
+
+
 
 // 統計関連
 function updateStatsModal(){
@@ -384,6 +418,9 @@ settingsBtn.addEventListener('click', ()=>{
   playSoundCheck.checked=userSettings.playSound;
   themeSelect.value=userSettings.theme;
   autoRecordDailyCheck.checked=userSettings.autoRecordDaily;
+  // ★追加
+  dayResetTimeInput.value = userSettings.dayResetTime; 
+
   settingsModal.classList.remove('hidden');
 });
 
@@ -394,6 +431,8 @@ saveSettingsBtn.addEventListener('click', ()=>{
   userSettings.playSound = playSoundCheck.checked;
   userSettings.theme = themeSelect.value;
   userSettings.autoRecordDaily = autoRecordDailyCheck.checked;
+  // ★追加
+  userSettings.dayResetTime = dayResetTimeInput.value; 
   saveUserSettings();
   applyTheme(userSettings.theme);
   settingsModal.classList.add('hidden');
